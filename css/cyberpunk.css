@@ -10828,7 +10828,7 @@ article.article .content .message.message-immersive .message-body {
   margin-right: 0;
 }
 .thumbnail {
-  object-fit: cover;
+  object-fit: contain;
   width: 100% !important;
   height: 100% !important;
 }
