@@ -4,7 +4,7 @@
   <url>
     <loc>http://yoursite.com/2020/09/02/THM-Vulnversity-WriteUp/</loc>
     
-    <lastmod>2020-09-02</lastmod>
+    <lastmod>2020-09-05</lastmod>
     
   </url>
   
@@ -25,7 +25,7 @@
 
   <url>
     <loc>http://yoursite.com/</loc>
-    <lastmod>2020-09-02</lastmod>
+    <lastmod>2020-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -33,35 +33,35 @@
   
   <url>
     <loc>http://yoursite.com/tags/cert-review/</loc>
-    <lastmod>2020-09-02</lastmod>
+    <lastmod>2020-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://yoursite.com/tags/elearnsecurity/</loc>
-    <lastmod>2020-09-02</lastmod>
+    <lastmod>2020-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://yoursite.com/tags/pentest/</loc>
-    <lastmod>2020-09-02</lastmod>
+    <lastmod>2020-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://yoursite.com/tags/TryHackMe/</loc>
-    <lastmod>2020-09-02</lastmod>
+    <lastmod>2020-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://yoursite.com/tags/walkthrough/</loc>
-    <lastmod>2020-09-02</lastmod>
+    <lastmod>2020-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -70,14 +70,14 @@
   
   <url>
     <loc>http://yoursite.com/categories/Certificate/</loc>
-    <lastmod>2020-09-02</lastmod>
+    <lastmod>2020-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://yoursite.com/categories/Walkthrough/</loc>
-    <lastmod>2020-09-02</lastmod>
+    <lastmod>2020-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
