@@ -2,16 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://jimmysured.github.io/2020/10/10/%E5%B0%8D%E6%96%BC%E5%90%84%E7%A8%AE%E8%B3%87%E5%AE%89%E5%85%A5%E9%96%80%E8%AD%89%E7%85%A7%E7%9A%84%E7%9C%8B%E6%B3%95/</loc>
+    <loc>https://jimmysured.github.io/2020/09/02/THM-Vulnversity-WriteUp/</loc>
     
     <lastmod>2020-10-09</lastmod>
     
   </url>
   
   <url>
-    <loc>https://jimmysured.github.io/2020/09/02/THM-Vulnversity-WriteUp/</loc>
+    <loc>https://jimmysured.github.io/2020/10/10/%E5%B0%8D%E6%96%BC%E5%90%84%E7%A8%AE%E8%B3%87%E5%AE%89%E5%85%A5%E9%96%80%E8%AD%89%E7%85%A7%E7%9A%84%E7%9C%8B%E6%B3%95/</loc>
     
-    <lastmod>2020-09-05</lastmod>
+    <lastmod>2020-10-09</lastmod>
     
   </url>
   
@@ -39,14 +39,7 @@
 
   
   <url>
-    <loc>https://jimmysured.github.io/tags/cert-review/</loc>
-    <lastmod>2020-10-09</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://jimmysured.github.io/tags/elearnsecurity/</loc>
+    <loc>https://jimmysured.github.io/tags/TryHackMe/</loc>
     <lastmod>2020-10-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -60,14 +53,21 @@
   </url>
   
   <url>
-    <loc>https://jimmysured.github.io/tags/TryHackMe/</loc>
+    <loc>https://jimmysured.github.io/tags/walkthrough/</loc>
     <lastmod>2020-10-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://jimmysured.github.io/tags/walkthrough/</loc>
+    <loc>https://jimmysured.github.io/tags/cert-review/</loc>
+    <lastmod>2020-10-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://jimmysured.github.io/tags/elearnsecurity/</loc>
     <lastmod>2020-10-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -76,14 +76,14 @@
 
   
   <url>
-    <loc>https://jimmysured.github.io/categories/Certificate/</loc>
+    <loc>https://jimmysured.github.io/categories/Walkthrough/</loc>
     <lastmod>2020-10-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://jimmysured.github.io/categories/Walkthrough/</loc>
+    <loc>https://jimmysured.github.io/categories/Certificate/</loc>
     <lastmod>2020-10-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
