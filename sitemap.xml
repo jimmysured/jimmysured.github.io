@@ -2,101 +2,115 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://jimmysured.github.io/2021/04/10/%E6%B8%85%E5%A4%A7%E8%B3%87%E5%AE%89%E6%89%80%E8%80%83%E8%A9%A6%E6%AD%A3%E5%8F%96%E5%BF%83%E5%BE%97/</loc>
+    <loc>https://jimmysured.github.io/2022/09/25/CRTO_Certificate_Review/</loc>
     
-    <lastmod>2022-03-03</lastmod>
+    <lastmod>2022-09-25</lastmod>
     
   </url>
   
   <url>
     <loc>https://jimmysured.github.io/about/index.html</loc>
     
-    <lastmod>2021-08-03</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://jimmysured.github.io/2021/01/02/vhl_review/</loc>
-    
-    <lastmod>2021-04-23</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://jimmysured.github.io/2020/09/02/THM_Vulnversity_WriteUp/</loc>
-    
-    <lastmod>2021-04-23</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://jimmysured.github.io/2020/08/07/%E5%B0%8D%E6%96%BC%E5%90%84%E7%A8%AE%E8%B3%87%E5%AE%89%E5%85%A5%E9%96%80%E8%AD%89%E7%85%A7%E7%9A%84%E7%9C%8B%E6%B3%95/</loc>
-    
-    <lastmod>2020-10-12</lastmod>
+    <lastmod>2022-09-25</lastmod>
     
   </url>
   
   <url>
     <loc>https://jimmysured.github.io/2020/08/07/ejpt_review/</loc>
     
-    <lastmod>2020-10-12</lastmod>
+    <lastmod>2022-08-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://jimmysured.github.io/2021/04/10/%E6%B8%85%E5%A4%A7%E8%B3%87%E5%AE%89%E6%89%80%E8%80%83%E8%A9%A6%E6%AD%A3%E5%8F%96%E5%BF%83%E5%BE%97/</loc>
+    
+    <lastmod>2022-08-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://jimmysured.github.io/2020/09/02/THM_Vulnversity_WriteUp/</loc>
+    
+    <lastmod>2022-08-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://jimmysured.github.io/2021/01/02/vhl_review/</loc>
+    
+    <lastmod>2022-08-06</lastmod>
     
   </url>
   
 
   <url>
     <loc>https://jimmysured.github.io/</loc>
-    <lastmod>2022-03-03</lastmod>
+    <lastmod>2022-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
   
   <url>
-    <loc>https://jimmysured.github.io/tags/TryHackMe/</loc>
-    <lastmod>2022-03-03</lastmod>
+    <loc>https://jimmysured.github.io/tags/cert-review/</loc>
+    <lastmod>2022-09-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://jimmysured.github.io/tags/zeropointsecurity/</loc>
+    <lastmod>2022-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://jimmysured.github.io/tags/pentest/</loc>
-    <lastmod>2022-03-03</lastmod>
+    <lastmod>2022-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://jimmysured.github.io/tags/walkthrough/</loc>
-    <lastmod>2022-03-03</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://jimmysured.github.io/tags/institute/</loc>
-    <lastmod>2022-03-03</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://jimmysured.github.io/tags/cert-review/</loc>
-    <lastmod>2022-03-03</lastmod>
+    <loc>https://jimmysured.github.io/tags/red-team/</loc>
+    <lastmod>2022-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://jimmysured.github.io/tags/elearnsecurity/</loc>
-    <lastmod>2022-03-03</lastmod>
+    <lastmod>2022-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://jimmysured.github.io/tags/vhl/</loc>
-    <lastmod>2022-03-03</lastmod>
+    <lastmod>2022-09-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://jimmysured.github.io/tags/institute/</loc>
+    <lastmod>2022-09-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://jimmysured.github.io/tags/TryHackMe/</loc>
+    <lastmod>2022-09-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://jimmysured.github.io/tags/walkthrough/</loc>
+    <lastmod>2022-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -104,22 +118,22 @@
 
   
   <url>
-    <loc>https://jimmysured.github.io/categories/Walkthrough/</loc>
-    <lastmod>2022-03-03</lastmod>
+    <loc>https://jimmysured.github.io/categories/Certificate/</loc>
+    <lastmod>2022-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://jimmysured.github.io/categories/Institute/</loc>
-    <lastmod>2022-03-03</lastmod>
+    <lastmod>2022-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://jimmysured.github.io/categories/Certificate/</loc>
-    <lastmod>2022-03-03</lastmod>
+    <loc>https://jimmysured.github.io/categories/Walkthrough/</loc>
+    <lastmod>2022-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>

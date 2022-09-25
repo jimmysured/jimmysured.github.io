@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>CRTO Certificate Review - su Jimmy</title><meta description="大家安, 在上個月初的時候考到了 Zero-Point Security 的 CRTO, 臺灣目前還沒有相關的心得文, 所以分享一下, 讓大家多一個可以增進自己紅隊能力的方法"><meta property="og:type" content="blog"><meta property="og:title" content="CRTO Certificate Review"><meta property="og:url" content="https://jimmysured.github.io/2022/09/25/CRTO_Certificate_Review/"><meta property="og:site_name" content="su Jimmy"><meta property="og:description" content="大家安, 在上個月初的時候考到了 Zero-Point Security 的 CRTO, 臺灣目前還沒有相關的心得文, 所以分享一下, 讓大家多一個可以增進自己紅隊能力的方法"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://jimmysured.github.io/img/crto.png"><meta property="article:published_time" content="2022-09-25T08:56:26.000Z"><meta property="article:modified_time" content="2022-09-25T08:38:00.634Z"><meta property="article:author" content="su Jimmy"><meta property="article:tag" content="cert review"><meta property="article:tag" content="zeropointsecurity"><meta property="article:tag" content="pentest"><meta property="article:tag" content="red team"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/crto.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://jimmysured.github.io/2022/09/25/CRTO_Certificate_Review/"},"headline":"su Jimmy","image":["https://jimmysured.github.io/img/crto.png"],"datePublished":"2022-09-25T08:56:26.000Z","dateModified":"2022-09-25T08:38:00.634Z","author":{"@type":"Person","name":"su Jimmy"},"description":"大家安, 在上個月初的時候考到了 Zero-Point Security 的 CRTO, 臺灣目前還沒有相關的心得文, 所以分享一下, 讓大家多一個可以增進自己紅隊能力的方法"}</script><link rel="canonical" href="https://jimmysured.github.io/2022/09/25/CRTO_Certificate_Review/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/favicon.svg" alt="su Jimmy" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/jimmysured"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="/img/crto.png" alt="CRTO Certificate Review"></span></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2022-09-25T08:56:26.000Z" title="2022-09-25T08:56:26.000Z">2022-09-25</time><span class="level-item"><a class="link-muted" href="/categories/Certificate/">Certificate</a></span><span class="level-item">16 minutes read (About 2440 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">CRTO Certificate Review</h1><div class="content"><p>大家安, 在上個月初的時候考到了 <a href="https://www.zeropointsecurity.co.uk/">Zero-Point Security</a> 的 <a href="https://training.zeropointsecurity.co.uk/courses/red-team-ops">CRTO</a>, 臺灣目前還沒有相關的心得文, 所以分享一下, 讓大家多一個可以增進自己紅隊能力的方法</p>
+<a id="more"></a>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>這篇文章大致會介紹 CRTO 是什麼, 所需的先備知識, 課程內容, 考試, 這幾個大部分</p>
+<p>作者是 <a href="https://twitter.com/_RastaMouse/">Daniel Duggan (Rasta Mouse)</a>, HackTheBox 中的 RastaLab 就是這位作者創的</p>
+<p>那 CRTO 和 CRTP 是不一樣的課程, 雖然兩張的受眾蠻像的, 但在內容還是有蠻多差別的, 如果想看 CRTP 的心得文做比較, 蠻推薦<a href="https://lonelysec.com/%E6%88%91%E7%9A%84-certified-red-team-professional-crtp-%E4%B9%8B%E6%97%85/">這篇的</a></p>
+<p>這張證照以及作者大家可能比較陌生, 這邊先提幾個最大的賣點</p>
+<ol>
+<li>能以極低的價格 (£399.00 ≈ NTD 15,000) 使用到 <strong>Cobalt Strike</strong></li>
+<li>為 Cobalt Strike <strong>官方認證</strong>的 Partenr</li>
+<li>課程內容包括<strong>內網滲透</strong>中各個<strong>攻擊手法</strong> (Kerberos Delegation, Abuse Domain Outbound Trust, LAPS, etc.), 以及如何以較<strong>隱蔽</strong>的方式, 執行這些攻擊手法, 也就是 <strong>OPSEC</strong></li>
+<li>有一台建好的 <strong>Kibana</strong> 可以讓你觀察做完攻擊手法後會產生什麼 Event Log, 並思考如何不被偵測到 </li>
+<li>除技術性內容外, 課程內容還包括如何執行一個正確的紅隊演練</li>
+<li>如果有購買課程, <strong>免費</strong>享有後續更新課程, 並且最近要將課程和 Lab 中 Cobalt Strike 升級到最新的 4.7 版本</li>
+<li>人性化的考試方式 (4 天 48 小時, 就是在 4 天內把這 48 小時用完, 怎麼用沒關係, 想 12 小時 * 4 或 24 小時 * 2 都 OK)</li>
+</ol>
+<p>這堂課會有一個專屬的 CRTO Discord channel, 有買這堂課的人才能加進去, 裡面的人都十分友善, 看到有人問問題會馬上回, 作者本人看到問題或是訊息也會馬上回, 裡面除了會討論 CRTO 之外, 也會討論其他技術性相關的事情, 算是一個還蠻活躍的小社群</p>
+<h2 id="為何我選擇這門課"><a href="#為何我選擇這門課" class="headerlink" title="為何我選擇這門課"></a>為何我選擇這門課</h2><p>因為我目前在奧義智慧科技 (CyCraft) 實習, 主要是研究 AD 相關的攻擊手法, 但大多數都是較為單點的攻擊手法研究, 對整個 AD 的攻擊鏈或是一個攻擊後續能做什麼使用沒有概念, 因此找了 CRTO 來考,</p>
+<p>那在考之前也知道有這張證照, 本來是打算考完 OSCP 後再考這張的, 但由於近期 OSCP 考試有新增 AD, 加上工作上有需求, 再加上在履歷中能寫自己會使用 Cobalt Strike, 以一個學生來說算是還不錯的加分項目, 所以就先考 CRTO 了</p>
+<p>那根據考過 OSCP 和 CRTO 的人說, CRTO 所涵蓋的 AD 遠超過 OSCP 所涵蓋的, 如果不像我是因為有工作上的需求, 加上手頭上的錢錢很夠的話, 推薦可以先考 OSCP</p>
+<h2 id="價格"><a href="#價格" class="headerlink" title="價格"></a>價格</h2><p>價格表如下</p>
+<table>
+<thead>
+<tr>
+<th>Types</th>
+<th>Price</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Course Only</td>
+<td>£365.00 ≈ NTD 12,500</td>
+</tr>
+<tr>
+<td>Course + 40 hours Lab</td>
+<td>£399.00 ≈ NTD 15,000</td>
+</tr>
+</tbody></table>
+<p>如果想要分成 4 期付, 在購買課程的地方也有這個選項, 整體價格算是蠻親民的, 雖然這張證照是公司補助我的, 但也能明顯的看出金額比起市面上大家數的證照 (Offensive-Security, SANS, INE, etc.) 還便宜</p>
+<h2 id="所需的先備知識"><a href="#所需的先備知識" class="headerlink" title="所需的先備知識"></a>所需的先備知識</h2><blockquote>
+<p>Before undertaking the course, students should have a basic knowledge and a working understanding of Windows &amp; Active Directory; basic scripting and/or programming (PowerShell, C/C++ or C# would be a bonus); and networking.</p>
+</blockquote>
+<p>這是直接從課程網頁節錄下來的, 簡單來說就是要對 AD 有一點點概念就 OK 了, 但有鑑於我平常實習就是在研究 AD, 所以可能不太有信服力, 加上如果目前還是學生應該沒有什麼機會可以碰到 AD, 所以這邊我有兩個推薦的資源</p>
+<ol>
+<li><strong>TCM Academy 的 <a href="https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course">Practical Ethical Hacking</a></strong><ul>
+<li>我有上過, 品質很好, 而且不單單只有帶到 AD, 連基礎的工具和手法也都有帶到, 算是不錯的入門課程</li>
+</ul>
+</li>
+<li><strong>TryHackMe 的 <a href="https://tryhackme.com/path/outline/redteaming">Red Teaming Learning Path</a></strong><ul>
+<li>最近一個多月才出的, 就我看到別人的 review 是給予很好的評價, 並且那篇 review 也有提到這個 path 算是準備 CRTP 或 CRTO 很不錯的課程, 如果有一點滲透測試的基礎, 我推薦可以花個小錢 (大概 NTD 300) 來完成這條 path, 完成後無縫接軌 CRTP 或 CRTO 基本上應該是沒問題</li>
+</ul>
+</li>
+</ol>
+<h1 id="課程內容"><a href="#課程內容" class="headerlink" title="課程內容"></a>課程內容</h1><p>課程內容大概是這樣</p>
+<blockquote>
+<ol>
+<li>Course Introduction<ol>
+<li>What is Red Teaming?</li>
+<li>Phases of an Engagement</li>
+<li>Command &amp; Control</li>
+<li>Cobalt Strike Primer</li>
+</ol>
+</li>
+<li>Planning &amp; Client Engagement Phase</li>
+<li>Assessment Phase<ol>
+<li>External Reconnaissance</li>
+<li>Initial Compromise</li>
+<li>Host Reconnaissance</li>
+<li>Host Persistence</li>
+<li>Host Privilege Escalation</li>
+<li>Domain Reconnaissance</li>
+<li>Lateral Movement</li>
+<li>Credentials &amp; User Impersonation</li>
+<li>Password Cracking Hints &amp; Tips</li>
+<li>Session Passing</li>
+<li>Pivoting</li>
+<li>Reverse Port Forwards</li>
+<li>Data Protection API</li>
+<li>Kerberos</li>
+<li>Group Policy</li>
+<li>Discretionary Access Control Lists</li>
+<li>MS SQL Servers</li>
+<li>Domain Dominance</li>
+<li>Forest &amp; Domain Trusts</li>
+<li>Local Administrator Password Solution</li>
+<li>Bypassing Antivirus</li>
+<li>Bypassing AppLocker</li>
+<li>Data Hunting &amp; Exfiltration</li>
+</ol>
+</li>
+<li>Post-Engagement &amp; Reporting</li>
+<li>Extending Cobalt Strike</li>
+</ol>
+</blockquote>
+<p>可以看到很多內網滲透常見或用到的攻擊手法都有包括在裡面, 那除了教攻擊手法外, Rasta Mouse 還會講他自己在做紅隊時的<strong>方法論</strong> (methodology), 以及相關的 <strong>OPSEC</strong>, 網路上的教學文章相對來說比較少見, 如果想要了解更詳細的內容可以直接私訊我</p>
+<h2 id="Lab"><a href="#Lab" class="headerlink" title="Lab"></a>Lab</h2><p>Lab 算是這個課程的重頭戲, Lab 裡共有 <strong>4 個 domain</strong>, 每個 domain 大概有 <strong>4 台電腦</strong>, 所以就是有大概 <strong>16 台電腦</strong>可以玩, </p>
+<p>要透過瀏覽器進到 SnapLabs 才能存取到 Lab, 使用起來我沒有什麼太大的問題, </p>
+<p>總共有 <strong>40 個小時</strong>可以做練習, 一開始會覺得有時限壓力很大, 但只要記得關掉, 基本上是不太會用完, 像我課程上完還有 25 小時還沒用, 所以可以放輕鬆地做練習</p>
+<p>這 4 個 domain 都是兩兩相通的, 也就是 A 可以存取 B, B 可以存取 C, 但 A 不能存取 C, 以此類推, 那這個 Lab 的用意就是讓你練習課程中學到的各種技巧, 以及體驗實際使用 Cobalt Strike 在做紅隊演練時會是什麼感覺</p>
+<p>Lab 中有一個 Kibana, 可以讓你觀察做完攻擊手法後會產生什麼 Log, 如果太顯眼的話, 可以想辦法隱藏自己的流量或是換成另一個能達到相同目的的攻擊手法</p>
+<h1 id="考試心得"><a href="#考試心得" class="headerlink" title="考試心得"></a>考試心得</h1><p>那在考試之前我整個課程的內容大概<strong>重做了三次</strong>, 第一二次就是照著做, 第三次就針對比較不熟的地方來做練習</p>
+<p>在你付完錢之後就可以預約考試了, 也可以今天預約隔天就考, 沒什麼太大的限制, 預約之後也可以改時間, 時限是 4 天 48 小時, 想怎麼分配都沒關係</p>
+<p>然後考試的方式基本上跟 Lab 差不多, 可以想像成是有另外一個時限 48 小時然後不會給你任何資訊的 Lab, 可以隨時暫停跟開始, 暫停的時候雖然不會算時間, 但 Cobalt Strike 的 beacon 會全消失 (因為暫停就像關機一樣), 所以如果想要維持打下機器的 beacon 的話, 就需要想一些 persistence 的方法</p>
+<p>考試<strong>沒 rabbit hole</strong>, 只要你好好上課, 作筆記, 並有理解課程內容的話, 會發現攻擊的路徑很清晰, 需要做的只有 <strong>Think out of box</strong> 而已</p>
+<h2 id="考試注意事項"><a href="#考試注意事項" class="headerlink" title="考試注意事項"></a>考試注意事項</h2><p>那在原本的 Lab 中, defender 在幾個 domain 中是沒啟用的, 那 Rasta Mouse 為了要讓考試比較有挑戰性一點, 考試中所有的 domain 都有 enable defender, 雖然 defender 很好繞, 但還是要注意蠻多東西的</p>
+<p>在你預約考試之後會有一份 Threat Profile 給你, 如果沒照著 Threat Profile 做的話, 會連一台機器都打不下來, 這邊推薦 malleable C2 profiles 要好好練習 </p>
+<h1 id="結語"><a href="#結語" class="headerlink" title="結語"></a>結語</h1><p>那真的很推薦不論是學生, 做攻擊, 做防守的都可以去上跟考看看的, 因為會從裡面學到很多, </p>
+<p>學生可以碰到平常打 TryHackMe 或 HackTheBox 很少碰到的 AD 環境, </p>
+<p>做攻擊的可以學到 C2, 各種攻擊手法以及和手法相關的 OPSEC,</p>
+<p>做防守的可以學到攻擊者是如何觀察到 AD 上可以被濫用的 “feature”, 並透過這個 “feature” 達到什麼目的, 以及透過 Lab 中的 Kibana 觀察, 在做 recon 或是攻擊手法會有什麼 Log </p>
+<p>整體來說是真的很推薦, 除非已經是紅隊大佬, 啪一下就可以打下整個企業 AD, 不然或多或少都能學到東西</p>
+<p>那 Rasta Mouse 在近期也有出 <a href="https://training.zeropointsecurity.co.uk/courses/red-team-ops-ii">CRTO II</a>, 比起 CRTO, 比較著重在 Bypass EDR 這個面向, 雖然我還沒實際出去工作, 但實不實會看到有文章或是 talk 在說 Red Team 是 EDR Bypass Team, 從這邊就可以看的出來在實戰上, EDR 對攻擊者來說算是一個很大的挑戰</p>
+<p>那有些人可能會好奇 OSCP, CRTP, CRTO, OSEP 這幾張偏紅隊證照的比較, 但我目前能力還不夠, 只考過 CRTO 一張, 等未來都把這些證照補齊, 沒意外應該是會寫一篇比較的文章</p>
+<h1 id="Good-Review"><a href="#Good-Review" class="headerlink" title="Good Review"></a>Good Review</h1><ul>
+<li><a href="https://www.youtube.com/watch?v=2IPxJSIe-lk">https://www.youtube.com/watch?v=2IPxJSIe-lk</a></li>
+<li><a href="https://www.youtube.com/watch?v=P2ioSJdcAJw">https://www.youtube.com/watch?v=P2ioSJdcAJw</a></li>
+<li><a href="https://m3rcer.github.io/redteaming/CRTO_Exam_Review/">https://m3rcer.github.io/redteaming/CRTO_Exam_Review/</a></li>
+<li><a href="https://jonyschats.nl/posts/CRTO-review/">https://jonyschats.nl/posts/CRTO-review/</a></li>
+<li><a href="https://0xash.io/Certified-Red-Team-Operator-Review/#">https://0xash.io/Certified-Red-Team-Operator-Review/#</a></li>
+<li><a href="https://http418infosec.com/certified-red-team-operator-crto-review">https://http418infosec.com/certified-red-team-operator-crto-review</a></li>
+<li><a href="https://amirr0r.github.io/posts/crto-review/">https://amirr0r.github.io/posts/crto-review/</a></li>
+<li><a href="https://gustavshen.medium.com/my-crto-course-and-exam-review-433f967f712e">https://gustavshen.medium.com/my-crto-course-and-exam-review-433f967f712e</a></li>
+<li><a href="https://jakemai0.github.io/posts/crto/">https://jakemai0.github.io/posts/crto/</a></li>
+</ul>
+</div><div class="article-tags size-small mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/cert-review/">cert review</a><a class="link-muted mr-2" rel="tag" href="/tags/zeropointsecurity/">zeropointsecurity</a><a class="link-muted mr-2" rel="tag" href="/tags/pentest/">pentest</a><a class="link-muted mr-2" rel="tag" href="/tags/red-team/">red team</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/04/10/%E6%B8%85%E5%A4%A7%E8%B3%87%E5%AE%89%E6%89%80%E8%80%83%E8%A9%A6%E6%AD%A3%E5%8F%96%E5%BF%83%E5%BE%97/"><span class="level-item">110清大資安所考試正取心得</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/kiro.jpg" alt="su Jimmy"></figure><p class="title is-size-4 is-block line-height-inherit">su Jimmy</p><p class="is-size-6 is-block">CyCraft Part-Time / NTHU IIS / CRTO / eJPT</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Taiwan</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">5</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">3</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">9</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="/null" target="_blank" rel="noopener">Follow</a></div><div class="level is-mobile"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/jimmysured"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://www.facebook.com/jimmysured"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Linkedin" href="https://www.linkedin.com/in/jyun-ming-su-828a0419b/"><i class="fab fa-linkedin"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/jimmysured"><i class="fab fa-twitter"></i></a></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">Categories</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Certificate/"><span class="level-start"><span class="level-item">Certificate</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Institute/"><span class="level-start"><span class="level-item">Institute</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Walkthrough/"><span class="level-start"><span class="level-item">Walkthrough</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">Tags</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/TryHackMe/"><span class="tag">TryHackMe</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/cert-review/"><span class="tag">cert review</span><span class="tag is-grey-lightest">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/elearnsecurity/"><span class="tag">elearnsecurity</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/institute/"><span class="tag">institute</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/pentest/"><span class="tag">pentest</span><span class="tag is-grey-lightest">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/red-team/"><span class="tag">red team</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/vhl/"><span class="tag">vhl</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/walkthrough/"><span class="tag">walkthrough</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/zeropointsecurity/"><span class="tag">zeropointsecurity</span><span class="tag is-grey-lightest">1</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">Catalogue</h3><ul class="menu-list"><li><a class="is-flex" href="#Introduction"><span class="mr-2">1</span><span>Introduction</span></a><ul class="menu-list"><li><a class="is-flex" href="#為何我選擇這門課"><span class="mr-2">1.1</span><span>為何我選擇這門課</span></a></li><li><a class="is-flex" href="#價格"><span class="mr-2">1.2</span><span>價格</span></a></li><li><a class="is-flex" href="#所需的先備知識"><span class="mr-2">1.3</span><span>所需的先備知識</span></a></li></ul></li><li><a class="is-flex" href="#課程內容"><span class="mr-2">2</span><span>課程內容</span></a><ul class="menu-list"><li><a class="is-flex" href="#Lab"><span class="mr-2">2.1</span><span>Lab</span></a></li></ul></li><li><a class="is-flex" href="#考試心得"><span class="mr-2">3</span><span>考試心得</span></a><ul class="menu-list"><li><a class="is-flex" href="#考試注意事項"><span class="mr-2">3.1</span><span>考試注意事項</span></a></li></ul></li><li><a class="is-flex" href="#結語"><span class="mr-2">4</span><span>結語</span></a></li><li><a class="is-flex" href="#Good-Review"><span class="mr-2">5</span><span>Good Review</span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">Recent</h3><article class="media"><a class="media-left" href="/2022/09/25/CRTO_Certificate_Review/"><p class="image is-64x64"><img class="thumbnail" src="/img/crto.png" alt="CRTO Certificate Review"></p></a><div class="media-content size-small"><p><time dateTime="2022-09-25T08:56:26.000Z">2022-09-25</time></p><p class="title is-6"><a class="link-muted" href="/2022/09/25/CRTO_Certificate_Review/">CRTO Certificate Review</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Certificate/">Certificate</a></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-04-10T09:21:46.000Z">2021-04-10</time></p><p class="title is-6"><a class="link-muted" href="/2021/04/10/%E6%B8%85%E5%A4%A7%E8%B3%87%E5%AE%89%E6%89%80%E8%80%83%E8%A9%A6%E6%AD%A3%E5%8F%96%E5%BF%83%E5%BE%97/">110清大資安所考試正取心得</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Institute/">Institute</a></p></div></article><article class="media"><div class="media-content size-small"><p><time dateTime="2021-01-01T17:33:46.000Z">2021-01-02</time></p><p class="title is-6"><a class="link-muted" href="/2021/01/02/vhl_review/">VHL Certificate Review</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Certificate/">Certificate</a></p></div></article><article class="media"><a class="media-left" href="/2020/09/02/THM_Vulnversity_WriteUp/"><p class="image is-64x64"><img class="thumbnail" src="/img/Vulnversity.png" alt="THM Vulnversity Walkthrough"></p></a><div class="media-content size-small"><p><time dateTime="2020-09-02T08:52:25.000Z">2020-09-02</time></p><p class="title is-6"><a class="link-muted" href="/2020/09/02/THM_Vulnversity_WriteUp/">THM Vulnversity Walkthrough</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Walkthrough/">Walkthrough</a></p></div></article><article class="media"><a class="media-left" href="/2020/08/07/ejpt_review/"><p class="image is-64x64"><img class="thumbnail" src="/img/ejpt.png" alt="eJPT Certificate Review"></p></a><div class="media-content size-small"><p><time dateTime="2020-08-07T06:43:21.000Z">2020-08-07</time></p><p class="title is-6"><a class="link-muted" href="/2020/08/07/ejpt_review/">eJPT Certificate Review</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Certificate/">Certificate</a></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">Archives</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/archives/2022/09/"><span class="level-start"><span class="level-item">September 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2021/04/"><span class="level-start"><span class="level-item">April 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2021/01/"><span class="level-start"><span class="level-item">January 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2020/09/"><span class="level-start"><span class="level-item">September 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2020/08/"><span class="level-start"><span class="level-item">August 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/favicon.svg" alt="su Jimmy" height="28"></a><p class="size-small"><span>&copy; 2022 su Jimmy</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://jimmysured.github.io',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to Top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>
