@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Diamond Ticket &amp; Sapphire Ticket - su Jimmy</title><meta description="大家安安, 這篇文章簡單介紹近期比較新的 AD 攻擊手法, Diamond Ticket 和 Sapphire Ticket"><meta property="og:type" content="blog"><meta property="og:title" content="Diamond Ticket &amp; Sapphire Ticket"><meta property="og:url" content="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/"><meta property="og:site_name" content="su Jimmy"><meta property="og:description" content="大家安安, 這篇文章簡單介紹近期比較新的 AD 攻擊手法, Diamond Ticket 和 Sapphire Ticket"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://jimmysured.github.io/img/og_image.png"><meta property="article:published_time" content="2022-09-28T06:45:46.000Z"><meta property="article:modified_time" content="2022-09-28T07:12:04.353Z"><meta property="article:author" content="su Jimmy"><meta property="article:tag" content="pentest"><meta property="article:tag" content="red team"><meta property="article:tag" content="AD technique"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/"},"headline":"su Jimmy","image":["https://jimmysured.github.io/img/og_image.png"],"datePublished":"2022-09-28T06:45:46.000Z","dateModified":"2022-09-28T07:12:04.353Z","author":{"@type":"Person","name":"su Jimmy"},"description":"大家安安, 這篇文章簡單介紹近期比較新的 AD 攻擊手法, Diamond Ticket 和 Sapphire Ticket"}</script><link rel="canonical" href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/favicon.svg" alt="su Jimmy" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/jimmysured"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2022-09-28T06:45:46.000Z" title="2022-09-28T06:45:46.000Z">2022-09-28</time><span class="level-item"><a class="link-muted" href="/categories/Technique/">Technique</a></span><span class="level-item">9 minutes read (About 1314 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">Diamond Ticket &amp; Sapphire Ticket</h1><div class="content"><p>大家安安, 這篇文章簡單介紹近期比較新的 AD 攻擊手法, Diamond Ticket 和 Sapphire Ticket </p>
+<a id="more"></a>
+
+<ul>
+<li>在開始介紹 Diamond &amp; Sapphire Ticket 之前, 要先介紹 Silver &amp; Golden Ticket, 因為在理解 Diamond &amp; Sapphire Ticket 之前需要先理解這兩個 Ticket 的原理和限制</li>
+</ul>
+<h1 id="Silver-amp-Golden-Ticket"><a href="#Silver-amp-Golden-Ticket" class="headerlink" title="Silver &amp; Golden Ticket"></a>Silver &amp; Golden Ticket</h1><h2 id="簡介"><a href="#簡介" class="headerlink" title="簡介"></a>簡介</h2><ul>
+<li>這邊不詳細描述 Silver 和 Golden Ticket 的原理</li>
+<li>簡單來說<ul>
+<li><strong>Silver Ticket</strong> 是偽造的 <strong>TGS</strong>, 如果拿到 <strong>machine account key</strong>, 可以偽造該 machine 上任何使用者到該 machine service 的 ticket, 後續可以做橫向移動或是提權</li>
+<li><strong>Golden Ticket</strong> 是偽造的 <strong>TGT</strong>, 需要 <strong>krbtgt key</strong>, 但通常拿到 krbtgt key 就已經<strong>打下整個 domain 了</strong>, 所以通常拿來進行 <strong>persistence</strong>, 或是在 <strong>Parent-child Trust</strong> 的情境下拿來進行橫向移動</li>
+</ul>
+</li>
+</ul>
+<h2 id="限制-amp-可能風險"><a href="#限制-amp-可能風險" class="headerlink" title="限制 &amp; 可能風險"></a>限制 &amp; 可能風險</h2><ul>
+<li><p>Silver Ticket 雖然使用條件較為寬鬆, 但其<strong>限制</strong>為有時只限制於<strong>任何使用者</strong>, 但<strong>單一 service</strong> 或是<strong>任何 service</strong>, 但<strong>單一 machine</strong></p>
+</li>
+<li><p>Golden Ticket 雖然能以任何使用者的身分訪問 domain 上任何的 service 但其<strong>限制</strong>為需要拿到 <strong>krbtgt key</strong></p>
+</li>
+<li><p>因為 Silver 和 Golden Ticket 都是透過<strong>偽造 ticket</strong> 達到的, 因此在 Kerberos 驗證流程中會<strong>沒有</strong>相對應的 <strong>Service Ticket requests (KRB_TGS_REQ)</strong> 或是 <strong>TGT request (KRB_AS_REQ)</strong>, 因此<strong>常被檢測到</strong> </p>
+</li>
+</ul>
+<h1 id="Diamond-Ticket"><a href="#Diamond-Ticket" class="headerlink" title="Diamond Ticket"></a>Diamond Ticket</h1><h2 id="簡介-amp-好處"><a href="#簡介-amp-好處" class="headerlink" title="簡介 &amp; 好處"></a>簡介 &amp; 好處</h2><ul>
+<li><p>Diamond Ticket 是近<strong>兩個月</strong>才跑出來的攻擊手法, 其<strong>結果和 Golden Ticket 相同</strong>, 如果成功使用 Diamond Ticket, 就能以任何使用者的身分訪問 domain 上任何的 service</p>
+</li>
+<li><p>但比起 Golden Ticket, Diamond Ticket <strong>更為隱密</strong>, 即 <strong>OPSEC 較佳</strong>, <strong>不容易被偵測到</strong></p>
+</li>
+<li><p>OPSEC 較佳的原因是因為</p>
+<ul>
+<li><strong>Golden Ticket</strong> 是透過偽造 TGT 達成的, 因此<strong>不會</strong>有與其相對應的 <strong>TGT request (KRB_AS_REQ)</strong>, 那也因為 TGT 是偽造的, 所以其中的 <strong>PAC</strong> 也是偽造的, 有時候會因為<strong>和真實的 PAC 不像</strong>, 讓<strong>被偵測的機率提高</strong></li>
+<li>而 <strong>Diamond Ticket</strong> 是<strong>直接請求一個 TGT</strong>, 並<strong>對 PAC 解密</strong>, <strong>修改 PAC</strong>, 接著重新計算 singnatures, 並再次加密這個 TGT</li>
+<li>那也因為是直接請求一個 TGT, 所以在 Kerberos 驗證流程中就會<strong>有</strong>相對應的 <strong>TGT request (KRB_AS_REQ)</strong>, 從而降低被偵測到的機率</li>
+</ul>
+</li>
+</ul>
+<h2 id="攻擊指令"><a href="#攻擊指令" class="headerlink" title="攻擊指令"></a>攻擊指令</h2><ul>
+<li><p>那因為需要對 TGT 進行解密, 所以也需要 <strong>krbtgt key</strong>, 並且強制需求要是 <strong>AES256 key</strong></p>
+</li>
+<li><p>Command:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Rubeus.exe diamond /domain:DOMAIN /user:USER /password:PASSWORD /dc:DOMAIN_CONTROLLER /enctype:AES256 /krbkey:HASH /ticketuser:USERNAME /ticketuserid:USER_ID /groups:GROUP_IDS</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>實際運行攻擊指令後會發現以下訊息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[*] Action: Diamond Ticket</span><br><span class="line"></span><br><span class="line">[*] No target SPN specified, attempting to build &#39;cifs&#x2F;dc.domain.com&#39;</span><br><span class="line">[*] Initializing Kerberos GSS-API w&#x2F; fake delegation for target &#39;cifs&#x2F;dc-2.dev.cyberbotic.io&#39;</span><br><span class="line">[+] Kerberos GSS-API initialization success!</span><br><span class="line">[+] Delegation requset success! AP-REQ delegation ticket is now in GSS-API output.</span><br><span class="line">[*] Found the AP-REQ delegation ticket in the GSS-API output.</span><br><span class="line">[*] Authenticator etype: aes256_cts_hmac_sha1</span><br><span class="line">[*] Extracted the service ticket session key from the ticket cache: +mzV4aOvQx3&#x2F;dpZGBaVEhccq1t+jhKi8oeCYXkjHXw4&#x3D;</span><br><span class="line">[+] Successfully decrypted the authenticator</span><br><span class="line">[*] base64(ticket.kirbi):</span><br><span class="line"></span><br><span class="line">      doIFgz [...snip...] MuSU8&#x3D;</span><br><span class="line"></span><br><span class="line">[*] Decrypting TGT          # here</span><br><span class="line">[*] Retreiving PAC          # here</span><br><span class="line">[*] Modifying PAC           # here</span><br><span class="line">[*] Signing PAC             # here</span><br><span class="line">[*] Encrypting Modified TGT # here</span><br><span class="line"></span><br><span class="line">[*] base64(ticket.kirbi):</span><br><span class="line"></span><br><span class="line">doIFYj [...snip...] MuSU8&#x3D;</span><br></pre></td></tr></table></figure></li>
+<li><p>在 <code>doIFgz [...snip...] MuSU8=</code> 的下一段, 明顯可以看出 Diamond Ticket 的確是透過修該合法的 TGT 當中的 PAC 來達到這個攻擊手法</p>
+</li>
+<li><p>後續只要再將這個 ticke pass 到環境中就可以使用了</p>
+</li>
+</ul>
+<h1 id="Sapphire-Ticket"><a href="#Sapphire-Ticket" class="headerlink" title="Sapphire Ticket"></a>Sapphire Ticket</h1><h2 id="簡介-amp-好處-1"><a href="#簡介-amp-好處-1" class="headerlink" title="簡介 &amp; 好處"></a>簡介 &amp; 好處</h2><ul>
+<li><p>而 Sapphire Ticket 是在我這篇文章 PO 出來的<strong>前幾天</strong>才出現的攻擊手法, 是我在滑 Twitter 時看到<a href="https://twitter.com/_nwodtuhs/status/1574163065142218755">這篇文章</a>才發現有這個攻擊手法的</p>
+</li>
+<li><p><strong>Sapphire Ticket</strong> 和 <strong>Diamond Ticket</strong> 的<strong>差別只在於修改 TGT 中 PAC 的方式</strong></p>
+<ul>
+<li><strong>Diamond Ticket</strong> 是透過對 TGT 中 PAC <strong>新增特權群組 (privileged groups)</strong>, 或是直接<strong>偽造一個特權群組並寫入 TGT 的 PAC 中</strong><ul>
+<li>那這個行為會讓檢測軟體能透過<strong>檢查</strong> <strong>TGT</strong> 中 <strong>PAC</strong> 的<strong>群組</strong>去和 Active Directory 中這個群組實際有沒有包含這個 user 做關聯</li>
+<li>舉例來說, 如果要讓沒有特殊權限的 <strong>userA</strong> 能夠訪問 doamin 上的各個 service, 就可以使用 Diamond Ticket, 那在過程中會修改 TGT 中的 PAC, 實際觀看這個 PAC 的值會發現, 使用者是 <strong>userA</strong>, 群組是一個<strong>特權群組</strong>, 這時候檢測軟體去 <strong>Active Directory 查看 userA 是不是這個特權群組的成員</strong>, 就會發現異常狀況</li>
+</ul>
+</li>
+<li>那 <strong>Sapphire Ticket</strong> 就是改良 Diamond Ticket 上面提到的可能的風險, 透過 <strong>S4U2self + u2u</strong> 來<strong>取得高權限使用者的 PAC</strong>, 並將 <strong>TGT</strong> 的 <strong>PAC 取代成高權限使用者的 PAC</strong><ul>
+<li>這樣檢測軟體在對 PAC 做檢測會因為 PAC 中特權群組裡的確有這個高權限使用者, 所以就認定該 PAC 是合法的</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>因 <strong>S4U2self + u2u</strong> 其背後原理有點複雜, 故不多在這贅述, 以後如果有機會再和大家分享其背後的原理</p>
+</li>
+</ul>
+<h2 id="攻擊指令-1"><a href="#攻擊指令-1" class="headerlink" title="攻擊指令"></a>攻擊指令</h2><ul>
+<li><p>由於太新, 因此在 Windows 上還沒有相關的工具能實作此攻擊手法, 目前只有 UNIX-based 的工具 <strong>Impackt</strong> 的 <strong>ticker</strong> 能實作</p>
+</li>
+<li><p>Command</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ticketer.py -request -impersonate <span class="string">'domainadmin'</span> -domain <span class="string">'DOMAIN.FQDN'</span> -user <span class="string">'domain_user'</span> -password <span class="string">'password'</span> -aesKey <span class="string">'krbtgt/service AES key'</span> -domain-sid <span class="string">'S-1-5-21-...'</span> <span class="string">'baduser'</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
+<li><a href="https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/silver">https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/silver</a></li>
+<li><a href="https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/golden">https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/golden</a></li>
+<li><a href="https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/diamond">https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/diamond</a></li>
+<li><a href="https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/sapphire">https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/sapphire</a></li>
+</ul>
+</div><div class="article-tags size-small mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/pentest/">pentest</a><a class="link-muted mr-2" rel="tag" href="/tags/red-team/">red team</a><a class="link-muted mr-2" rel="tag" href="/tags/AD-technique/">AD technique</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2022/09/25/CRTO_Certificate_Review/"><span class="level-item">CRTO Certificate Review</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><!--!--><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/favicon.svg" alt="su Jimmy" height="28"></a><p class="size-small"><span>&copy; 2022 su Jimmy</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://jimmysured.github.io',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to Top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>
