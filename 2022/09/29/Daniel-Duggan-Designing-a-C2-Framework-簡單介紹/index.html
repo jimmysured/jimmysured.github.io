@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.1"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Daniel Duggan - Designing a C2 Framework 簡介 - su Jimmy</title><meta description="這篇文章是簡單統整 Rasta Mouse, CRTO 的作者, 在去年的 DEFCON 分享如何構建一個 C2 框架的議程, 並且有基於此議程, 實際教導如何使用 C# 來構建一個 C2 框架的課程"><meta property="og:type" content="blog"><meta property="og:title" content="Daniel Duggan - Designing a C2 Framework 簡介"><meta property="og:url" content="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-%E7%B0%A1%E5%96%AE%E4%BB%8B%E7%B4%B9/"><meta property="og:site_name" content="su Jimmy"><meta property="og:description" content="這篇文章是簡單統整 Rasta Mouse, CRTO 的作者, 在去年的 DEFCON 分享如何構建一個 C2 框架的議程, 並且有基於此議程, 實際教導如何使用 C# 來構建一個 C2 框架的課程"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://jimmysured.github.io/img/c2_1.png"><meta property="og:image" content="https://jimmysured.github.io/img/c2_2.png"><meta property="og:image" content="https://jimmysured.github.io/img/c2_3.png"><meta property="og:image" content="https://jimmysured.github.io/img/c2_4.png"><meta property="og:image" content="https://jimmysured.github.io/img/c2_5.png"><meta property="og:image" content="https://jimmysured.github.io/img/c2_6.png"><meta property="article:published_time" content="2022-09-29T08:46:21.000Z"><meta property="article:modified_time" content="2022-09-29T09:11:23.552Z"><meta property="article:author" content="su Jimmy"><meta property="article:tag" content="red team"><meta property="article:tag" content="defcon"><meta property="article:tag" content="talk"><meta property="article:tag" content="c2"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/c2_1.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-%E7%B0%A1%E5%96%AE%E4%BB%8B%E7%B4%B9/"},"headline":"su Jimmy","image":["https://jimmysured.github.io/img/c2_1.png","https://jimmysured.github.io/img/c2_2.png","https://jimmysured.github.io/img/c2_3.png","https://jimmysured.github.io/img/c2_4.png","https://jimmysured.github.io/img/c2_5.png","https://jimmysured.github.io/img/c2_6.png"],"datePublished":"2022-09-29T08:46:21.000Z","dateModified":"2022-09-29T09:11:23.552Z","author":{"@type":"Person","name":"su Jimmy"},"description":"這篇文章是簡單統整 Rasta Mouse, CRTO 的作者, 在去年的 DEFCON 分享如何構建一個 C2 框架的議程, 並且有基於此議程, 實際教導如何使用 C# 來構建一個 C2 框架的課程"}</script><link rel="canonical" href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-%E7%B0%A1%E5%96%AE%E4%BB%8B%E7%B4%B9/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/favicon.svg" alt="su Jimmy" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/jimmysured"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2022-09-29T08:46:21.000Z" title="2022-09-29T08:46:21.000Z">2022-09-29</time><span class="level-item"><a class="link-muted" href="/categories/Technique/">Technique</a></span><span class="level-item">11 minutes read (About 1687 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">Daniel Duggan - Designing a C2 Framework 簡介</h1><div class="content"><p>這篇文章是簡單統整 <a href="https://twitter.com/_RastaMouse">Rasta Mouse</a>, CRTO 的作者, 在去年的 DEFCON 分享如何構建一個 C2 框架的議程, 並且有基於此議程, 實際教導如何使用 C# 來構建一個 C2 框架的<a href="https://training.zeropointsecurity.co.uk/courses/c2-development-in-csharp">課程</a></p>
+<a id="more"></a>
+<h1 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h1><ul>
+<li>可以透過 <a href="https://www.thec2matrix.com/">C2 Matrix</a> 來尋找符合自己要求的 C2</li>
+</ul>
+<h2 id="C2-Model"><a href="#C2-Model" class="headerlink" title="C2 Model"></a>C2 Model</h2><ul>
+<li><p><strong>Operators &lt;-&gt; Control Server (aka “Team Sever”) &lt;-&gt; Target (with implant)</strong></p>
+<ul>
+<li><strong>Operators</strong>:<ul>
+<li>會對 Target 發送 implant (可以想像成 payload, RAT), 並需要持續的對 implant 進行控制</li>
+<li>會有一個獨立的 client, 讓 Operator 可以透過類似 admin interface 和 Control Server 互動</li>
+<li>會透過給 Control Server 任務, 藉此來給 implant 指令 </li>
+</ul>
+</li>
+<li><strong>Target (with implant)</strong>:<ul>
+<li>Target 上的 implant 會透過 HTTP 或 DNS 之類的協定和 Control Server 通訊, 藉此來和 Operators 進行互動 </li>
+<li>Implant 接收到 Operators, 也就是 Control Server 的指令後, 需要返回執行指令的結果給 Control Server 讓 Operators 能夠觀看結果 </li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>這邊如果想要更簡化, 可以<strong>直接地把 Control Server 當作 Operator</strong></p>
+</li>
+<li><p>那中間會有 Control Server 的原因是因為, 通常使用到 C2 Framework 時, 除非你是 one man army, 不然通常都是<strong>大於兩個人</strong>在使用 C2 Framework, 如果沒有一個 Control Server 在中間提供一個<strong>統一且同步</strong>的媒介, 可能會<strong>讓行動變得很複雜</strong></p>
+<ul>
+<li>舉例來說, 有 A, B 兩個人要對一個 AD 進行滲透測試 or 紅隊演練, 如果沒有 Control Server, 會有以下的問題<ol>
+<li><strong>行動很難統一和同步</strong><ul>
+<li>B 可能沒辦法和 A 丟到 Target C 的 implant 進行互動, 那可能 B 還要再丟另一個 implant 到 Target C 或是另外想一個方法和 A 丟進去的 implant 進行互動</li>
+<li>如果有 Control Server, 可以提供一個統一的媒介, 讓 A, B 可以透過 Control Server 生成一個 implant 並丟到 Target C 上, 接下來 A, B 只要和 Control Server 進行通訊, 就可以和 Target C 進行互動</li>
+</ul>
+</li>
+<li><strong>行動很難追蹤和還原</strong><ul>
+<li>如果 A, B 都是透過自己的電腦來進行行動的話, 若後續客戶需要對做過的攻擊進行查證, 可能會讓查證的過程過的很複雜甚至無法進行查證</li>
+<li>如果有 Control Server 的話, A, B 對 implant 做的任何互動以及行為都會被 Control Server 記錄下來, 可以直接透過 log 來進行查證</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>如果以上很難想像, 可以考一樣也是這位作者出的證照, <a href="https://training.zeropointsecurity.co.uk/courses/red-team-ops">CRTO</a>, 因為 CRTO 所帶到的內容會讓你對 Red Team, C2 有基礎的瞭解, 我也有寫一篇<a href="https://jimmysured.github.io/2022/09/25/CRTO_Certificate_Review/">心得文</a>可以參考</p>
+</li>
+</ul>
+<h2 id="C2-Framework"><a href="#C2-Framework" class="headerlink" title="C2 != Framework"></a>C2 != Framework</h2><ul>
+<li><p>C2 不等於 C2 Framework</p>
+</li>
+<li><p>C2 Framework 提供以下功能</p>
+<ul>
+<li><p><strong>Inversion of control</strong></p>
+<ul>
+<li>降低 Operators 和 Implant 之間的<strong>耦合度</strong></li>
+</ul>
+</li>
+<li><p><strong>Default behaviours</strong></p>
+<ul>
+<li>提供預設的行為給 Operators, 像是上面舉例的透過 HTTP 或 DNS 進行通訊, 並提供使用者修改這些 Default behaviours 的能力 (e.g., Cobalt Strike 中的 Malleable C2 profile) </li>
+</ul>
+</li>
+<li><p><strong>Extensibility (without modifying the core)</strong></p>
+<ul>
+<li>讓使用者可以在不修改核心程式碼的情況下, 新增原先沒有的功能, 行為</li>
+</ul>
+</li>
+<li><p><strong>Reusable components</strong></p>
+<ul>
+<li>應該不用多做解釋 XD</li>
+</ul>
+<h3 id="Example-Metasploit"><a href="#Example-Metasploit" class="headerlink" title="Example (Metasploit)"></a>Example (Metasploit)</h3></li>
+<li><p>Metasploit 為一個較為成熟的框架, 任何人都可以自己寫一個 module 到 Metasploit, 因此作者在這邊拿 Metasploit 中的 <a href="https://github.com/rapid7/metasploit-framework/blob/master/modules/exploits/windows/smb/psexec.rb">psexec.rb</a> 做介紹</p>
+<ol>
+<li><p><strong>Define module info</strong></p>
+<ul>
+<li>在 module 中提供漏洞名稱, 作者名稱, 對該 module 的描述, 參考資料等資訊, 方便使用者, 也就是 Operators 進行查找</li>
+<li><img src="/img/c2_1.png" alt=""></li>
+</ul>
+</li>
+<li><p><strong>Register options</strong></p>
+<ul>
+<li>一些對 module 來說很重要的選項, 像是 service 名稱, PowerShell 的路徑等</li>
+<li><img src="/img/c2_2.png" alt=""></li>
+</ul>
+</li>
+<li><p><strong>Includes &amp; Helpers</strong></p>
+<ul>
+<li>因為這個檔案有 include smb, 所以可以不用在你的 module 中自己寫一個 smb library, 以此類推</li>
+<li><img src="/img/c2_3.png" alt=""></li>
+<li>如果沒有提供檔案名稱, module 會幫助你將傳過去的檔案以英文亂碼命名, 那 <code>rand_text_alpha()</code> 也是 framework 定義好的 module, 所以就不用特意去思考說還要在寫一個產生英文亂碼的 module, 因為 framework 都幫你寫好了</li>
+<li><img src="/img/c2_4.png" alt=""></li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="Which-Language"><a href="#Which-Language" class="headerlink" title="Which Language"></a>Which Language</h1><h2 id="Server"><a href="#Server" class="headerlink" title="Server"></a>Server</h2><ul>
+<li><p><strong>Python</strong></p>
+<ul>
+<li>Flask, Django</li>
+</ul>
+</li>
+<li><p><strong>ASP.NET Core (C#)</strong></p>
+<ul>
+<li>Blazor, Web API, gRPC</li>
+</ul>
+</li>
+<li><p>Others</p>
+<ul>
+<li>Vue.js, React, Angular</li>
+</ul>
+</li>
+</ul>
+<h2 id="Implant"><a href="#Implant" class="headerlink" title="Implant"></a>Implant</h2><ul>
+<li><p><strong>OS specific</strong></p>
+<ul>
+<li>C# (.NET Framework), Swift</li>
+</ul>
+</li>
+<li><p><strong>Cross-compilation</strong></p>
+<ul>
+<li>Nim, Rust, Go</li>
+</ul>
+</li>
+<li><p><strong>Cross-platform</strong></p>
+<ul>
+<li>.NET, .NET Core, Python</li>
+</ul>
+</li>
+</ul>
+<h1 id="Design-Patterns"><a href="#Design-Patterns" class="headerlink" title="Design Patterns"></a>Design Patterns</h1><h2 id="Command-Design-Pattern"><a href="#Command-Design-Pattern" class="headerlink" title="Command Design Pattern"></a>Command Design Pattern</h2><ul>
+<li><p><img src="/img/c2_5.png" alt=""></p>
+<ol>
+<li>可以將 Operator 算是 client, 透過 <strong>Task (Guid implant)</strong> 函式, 將 Task, Command, Argument 傳送到 Server, 也就是 director</li>
+<li>接著 Server 透過 <strong>SendTask()</strong> 函式, 將 Task, TaskGuid, Command, Argument 傳送到 Task, 也就是 command</li>
+<li>接著 Task 透過 <strong>ExecuteTask()</strong> 函式, 在 implant, 也就是 receiver 上執行 task</li>
+</ol>
+</li>
+<li><p>在上圖會注意到 <strong>TaskGuid</strong> 被特別框起來, 被框起來的原因是因為, server 會做這件事, 但不是在這個 model 中, 有 TaskGuid 的原因是因為要追蹤 Task <strong>執行的進度</strong>或是<strong>結果</strong>, 當 implant, 也就是 receiver 執行指令後, 會回傳訊息, 這時候 Server 可以直接透過 Guid 去做查詢</p>
+<h3 id="Contracts"><a href="#Contracts" class="headerlink" title="Contracts"></a>Contracts</h3><ul>
+<li><strong>不要在不同的 element 中使用同一個 model</strong></li>
+<li>Operator &lt;-&gt; Server</li>
+<li>Server &lt;-&gt; Implant</li>
+<li>Server &lt;-&gt; Storage</li>
+</ul>
+</li>
+</ul>
+<h2 id="Template-Method-Pattern"><a href="#Template-Method-Pattern" class="headerlink" title="Template Method Pattern"></a>Template Method Pattern</h2><ul>
+<li><img src="/img/c2_6.png" alt=""><ul>
+<li>當設計完 Abstract Class, Listenr, 之後, 後續如果自己或是其他人想寫客製化 module, 可以不用思考其背後運作原理, 只要呼叫 Abstract Class 裡面的 method 即可</li>
+<li>詳細例子可以參考議程影片的這個部分, 作者舉的例子很清楚</li>
+</ul>
+</li>
+</ul>
+<h1 id="Base-Primitives-gt-Command-Proliferation"><a href="#Base-Primitives-gt-Command-Proliferation" class="headerlink" title="Base Primitives &gt; Command Proliferation"></a>Base Primitives &gt; Command Proliferation</h1><ul>
+<li><p><strong>Base Primitives</strong></p>
+<ul>
+<li>Shell/PowerShell Execution</li>
+<li>(.NET) Reflection</li>
+<li>Reflective DLLs</li>
+<li>Manuel Mapping</li>
+<li>Sockets</li>
+</ul>
+</li>
+<li><p><strong>Commands</strong></p>
+<ul>
+<li>ls, cd, pwd, whoami, …</li>
+<li>Seatbelt</li>
+<li>Rubeus</li>
+<li>Mimikatz</li>
+</ul>
+</li>
+<li><p>作者認為, <strong>base primitves 比起 command 較佳</strong>. 雖然在 C2 Framework 中能直接使用 command 很方便, 但當 Operator 想使用客製化的工具或是攻擊手法時, base primitves 是較佳的選擇.</p>
+</li>
+<li><p>作者在這邊提出 command 的幾個缺點:</p>
+<ul>
+<li>非常沒有彈性</li>
+<li>很難進行維護和擴充</li>
+<li>很難 handle exception</li>
+<li>程式碼會重複</li>
+<li>效能不太高</li>
+<li>所有東西都是字串</li>
+<li>很醜</li>
+</ul>
+</li>
+<li><p>比較好的方式, 是將這些 command <strong>抽象化</strong> (Abstract)</p>
+</li>
+</ul>
+<h1 id="結語"><a href="#結語" class="headerlink" title="結語"></a>結語</h1><ul>
+<li>這邊很推薦想自己寫一個 C2 Framework 或是想了解 C2 背後運作原理的人去看這個議程, 因為我這篇文章只是簡單概述, 影片中有講到其他比較深入的內容, 像是設計 C2 時該注意的事, 設計 C2 時的心態, 對 Design Pattern 更深入地解說等內容</li>
+<li>那如果對設計一個 C2 Framework 很感興趣, 也可以去參考作者的 <strong><a href="https://training.zeropointsecurity.co.uk/courses/c2-development-in-csharp">C2 Development in C#</a></strong> 這門課, 那作者有說近期收到蠻多 feedback, 要對課程做一個大更新, 有興趣的可以先買起來放著, 等更新再看</li>
+</ul>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
+<li><a href="https://www.youtube.com/watch?v=oasBguDw_Ho">https://www.youtube.com/watch?v=oasBguDw_Ho</a></li>
+</ul>
+</div><div class="article-tags size-small mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/red-team/">red team</a><a class="link-muted mr-2" rel="tag" href="/tags/defcon/">defcon</a><a class="link-muted mr-2" rel="tag" href="/tags/talk/">talk</a><a class="link-muted mr-2" rel="tag" href="/tags/c2/">c2</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2022/09/28/Diamond-Ticket-Sapphire-Ticket/"><span class="level-item">Diamond Ticket &amp; Sapphire Ticket</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><!--!--><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/favicon.svg" alt="su Jimmy" height="28"></a><p class="size-small"><span>&copy; 2022 su Jimmy</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'https://jimmysured.github.io',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to Top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>
