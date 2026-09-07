@@ -2,13 +2,15 @@
 title = "CRTO Certificate Review"
 date = 2022-09-25
 path = "2022/09/25/CRTO_Certificate_Review"
-description = "CRTO (Certified Red Team Operator) 心得: 課程內容、Lab 環境、考試流程與準備方向。"
+description = "Notes on Zero-Point Security's CRTO: course content, the lab, the exam, and how to prepare."
+
+[extra]
+lang = "zh"
 
 [taxonomies]
 tags = ["cert", "red team", "pentest"]
 categories = ["Certificate"]
 +++
-
 大家安, 在上個月初的時候考到了 [Zero-Point Security](https://www.zeropointsecurity.co.uk/) 的 [CRTO](https://training.zeropointsecurity.co.uk/courses/red-team-ops), 臺灣目前還沒有相關的心得文, 所以分享一下, 讓大家多一個可以增進自己紅隊能力的方法
 
 <!-- more -->

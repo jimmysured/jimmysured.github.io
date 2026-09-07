@@ -2,13 +2,15 @@
 title = "THM Vulnversity Walkthrough"
 date = 2020-09-02
 path = "2020/09/02/THM_Vulnversity_WriteUp"
-description = "TryHackMe Vulnversity walkthrough, 記錄卡比較久的地方: systemctl 提權與 GTFOBins 的用法。"
+description = "TryHackMe Vulnversity walkthrough, focusing on the part that took me longest: systemctl privesc via GTFOBins."
+
+[extra]
+lang = "zh"
 
 [taxonomies]
 tags = ["walkthrough", "pentest"]
 categories = ["Walkthrough"]
 +++
-
 大家安，今天來分享一下在解這台簡單的機器讓我想比較久的地方。
 
 <!-- more -->

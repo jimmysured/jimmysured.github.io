@@ -2,13 +2,15 @@
 title = "Diamond Ticket & Sapphire Ticket"
 date = 2022-09-28
 path = "2022/09/28/Diamond-Ticket-Sapphire-Ticket"
-description = "Diamond Ticket 與 Sapphire Ticket 介紹, 以及跟 Golden / Silver Ticket 的差異和偵測上的難點。"
+description = "An intro to Diamond and Sapphire Tickets, how they differ from Golden and Silver Tickets, and why they are hard to detect."
+
+[extra]
+lang = "zh"
 
 [taxonomies]
 tags = ["active directory", "red team", "pentest"]
 categories = ["Technique"]
 +++
-
 大家安安, 這篇文章簡單介紹近期比較新的 AD 攻擊手法, Diamond Ticket 和 Sapphire Ticket 
 
 <!-- more -->

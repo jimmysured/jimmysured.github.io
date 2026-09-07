@@ -2,13 +2,15 @@
 title = "eJPT Certificate Review"
 date = 2020-08-07
 path = "2020/08/07/ejpt_review"
-description = "eJPT 心得: 課程內容、考試形式與準備方式, 以及這張入門滲透測試證照適合誰。"
+description = "eJPT review: what the course and exam cover, how to prepare, and who this entry-level pentest cert suits."
+
+[extra]
+lang = "zh"
 
 [taxonomies]
 tags = ["cert", "pentest"]
 categories = ["Certificate"]
 +++
-
 大家安，大概在四月中的時候拿到eJPT，在考之前就有發現臺灣沒有任何一篇有關eJPT的心得，想說分享一下順便紀錄一下心得。
 
 <!-- more -->

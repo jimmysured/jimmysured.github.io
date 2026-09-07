@@ -2,13 +2,15 @@
 title = "Daniel Duggan - Designing a C2 Framework 簡介"
 date = 2022-09-29
 path = "2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹"
-description = "整理 Rasta Mouse 在 DEF CON 分享的 C2 框架設計: C2 模型、語言選擇, 以及 Implant 的設計模式。"
+description = "A summary of Rasta Mouse's DEF CON talk on designing a C2 framework: the C2 model, language choice, and implant design patterns."
+
+[extra]
+lang = "zh"
 
 [taxonomies]
 tags = ["c2", "red team", "talk"]
 categories = ["Technique"]
 +++
-
 這篇文章是簡單統整 [Rasta Mouse](https://twitter.com/_RastaMouse), CRTO 的作者, 在去年的 DEFCON 分享如何構建一個 C2 框架的議程, 並且有基於此議程, 實際教導如何使用 C# 來構建一個 C2 框架的[課程](https://training.zeropointsecurity.co.uk/courses/c2-development-in-csharp)
 
 <!-- more -->

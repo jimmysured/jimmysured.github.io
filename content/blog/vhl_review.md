@@ -2,13 +2,15 @@
 title = "VHL Certificate Review"
 date = 2021-01-02
 path = "2021/01/02/vhl_review"
-description = "Virtual Hacking Labs (VHL) 心得: Lab 難度分級、跟 HTB 的差異, 以及在 OSCP 考前練習的定位。"
+description = "Virtual Hacking Labs (VHL) review: lab difficulty tiers, how it differs from HTB, and where it fits before OSCP."
+
+[extra]
+lang = "zh"
 
 [taxonomies]
 tags = ["cert", "pentest"]
 categories = ["Certificate"]
 +++
-
 大家安，今天來介紹一個OSCP考前不錯的練習網站。
 
 <!-- more -->

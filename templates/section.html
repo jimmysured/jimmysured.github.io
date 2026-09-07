@@ -1,12 +1,15 @@
 {% extends "base.html" %}
 
-{% block main %}
+{%- block main -%}
   <main>
-    {{ section.content | safe }}
-    {%- set blog = get_section(path="blog/_index.md") %}
-    {%- set recent = blog.pages | slice(end=5) %}
+    {%- if taxonomy.term %}
+      <h3 class="filter">{{ trans(key="filtering_for",lang=lang)}} "{{ section.title }}"</h3>
+      <small>
+        <a href="{{ get_url(path="@/blog/_index.md", lang=lang) }}">{{ trans(key="remove_filter", lang=lang) }}</a>
+      </small>
+    {%- endif %}
     <ul class="blog-posts">
-      {%- for page in recent %}
+      {%- for page in section.pages %}
         <li>
           <span class="post-date">
             <time datetime="{{ page.date | date(format='%+') }}" pubdate>{{ page.date | date(format=config.extra.date_format) }}</time>
@@ -25,7 +28,8 @@
     </ul>
     <p class="lang-legend">ZH 中文&nbsp;&nbsp;·&nbsp;&nbsp;EN English</p>
     <div class="tags">
-      {%- set tags = get_taxonomy(kind="tags", lang=lang) %}
+      {%- set taxonomy_group = section.extra.taxonomy_group | default(value="tags") %}
+      {%- set tags = get_taxonomy(kind=taxonomy_group, lang=lang) %}
       {%- for post in tags.items %}
         <a href="{{ post.permalink }}">#{{ post.name }}</a>&nbsp;
       {%- endfor %}
