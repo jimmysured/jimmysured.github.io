@@ -1,0 +1,19 @@
+<footer>
+  {%- if config.extra.social %}
+    <div class="social-links">
+      {%- for link in config.extra.social %}
+        <a href="{{ link.url }}" rel="me noopener" target="_blank">{{ link.name }}</a>
+      {%- endfor %}
+      {%- if config.generate_feeds %}
+        {%- for feed_filename in config.feed_filenames %}
+        <a href="{{ get_url(path=feed_filename) | safe }}">RSS</a>
+        {%- endfor %}
+      {%- endif %}
+    </div>
+  {%- endif %}
+  {%- if not config.extra.hide_made_with_line %}
+    <div>
+      {{ trans(key="made_with", lang=lang) }} <a href="https://codeberg.org/alinnow/zola-bearblog">Zola ʕ•ᴥ•ʔ Bear</a>
+    </div>
+  {%- endif %}
+</footer>

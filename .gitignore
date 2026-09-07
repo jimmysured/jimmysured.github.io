@@ -1,0 +1,13 @@
+# Zola build 產物
+/public
+/public_prod
+
+# 測試/暫存
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
+
+# 編輯器
+.vscode/
+.idea/

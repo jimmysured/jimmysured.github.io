@@ -1,0 +1,78 @@
+{% import "macros.html" as macros %}
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} | {{ super() }}{% endblock %}
+
+{% block main %}
+  {%- if not page.extra.menu -%}
+    <h1>{{ page.title }}</h1>
+    {%- if page.date %}
+      <p class="meta-inline">
+        <i>
+          <time datetime="{{ page.date | date(format='%+') }}" pubdate>
+            {{- page.date | date(format=config.extra.date_format) -}}
+          </time>
+        </i>
+      </p>
+    {%- endif %}
+  {%- endif %}
+
+  {#- 左側 metadata rail(寬螢幕才顯示)-#}
+  {%- if page.date %}
+    <aside class="meta-rail">
+      <div class="meta-block">
+        <span class="meta-label">Published</span>
+        <time datetime="{{ page.date | date(format='%+') }}">{{ page.date | date(format=config.extra.date_format) }}</time>
+      </div>
+      {%- if page.taxonomies.tags %}
+        <div class="meta-block">
+          <span class="meta-label">Tags</span>
+          {%- for item in page.taxonomies.tags %}
+            <a href="{{ get_taxonomy_url(kind='tags', name=item, lang=lang) }}">#{{ item }}</a>
+          {%- endfor %}
+        </div>
+      {%- endif %}
+      {#- Zola 的 reading_time 把每個中文字當一個 word(200 wpm),中文會高估約一倍。
+          改用 word_count / 350 自行換算,兼顧中英混排。 -#}
+      {%- if page.word_count %}
+        {%- set raw = (page.word_count / 350) | round(method="ceil") %}
+        {%- if raw < 1 %}{% set_global mins = 1 %}{% else %}{% set_global mins = raw %}{% endif %}
+        <div class="meta-block">
+          <span class="meta-label">Reading</span>
+          <span>{{ mins }} min</span>
+        </div>
+      {%- endif %}
+    </aside>
+  {%- endif %}
+
+  {%- set show_toc = config.extra.table_of_contents.show and not page.extra.hide_table_of_contents and page.toc %}
+
+  {%- if show_toc %}
+    {#- 寬螢幕:右側浮動目錄 -#}
+    <aside class="toc-float">
+      <span class="toc-title">{{ trans(key="table_of_contents", lang=lang) }}</span>
+      {{- macros::table_of_contents(toc=page.toc, max_level=config.extra.table_of_contents.max_level) | indent() | safe() }}
+    </aside>
+
+    {#- 窄螢幕:可收合目錄 -#}
+    <details class="toc-inline" {% if config.extra.table_of_contents.visible_on_load %}open{% endif %}>
+      <summary>{{ trans(key="table_of_contents", lang=lang) }}</summary>
+      {{- macros::table_of_contents(toc=page.toc, max_level=config.extra.table_of_contents.max_level) | indent() | safe() }}
+    </details>
+  {%- endif %}
+
+  <main>
+    {{ page.content | safe }}
+  </main>
+
+  <p class="meta-inline">
+    {%- if page.taxonomies %}
+      {%- for name, taxon in page.taxonomies %}
+        {{ name | capitalize }}:
+        {%- for item in taxon %}
+          <a href="{{ get_taxonomy_url(kind=name, name=item, lang=lang) }}">#{{ item }}</a>
+        {%- endfor %}
+      {%- endfor %}
+    {%- endif %}
+  </p>
+{% endblock %}
