@@ -12,14 +12,8 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-# 根目錄偵測:$PSScriptRoot 在某些執行環境會是空的,多層 fallback
-$root = $PSScriptRoot
-if ([string]::IsNullOrEmpty($root)) { $root = Split-Path -Parent $MyInvocation.MyCommand.Path }
-if ([string]::IsNullOrEmpty($root)) { $root = (Get-Location).Path }
-if ([string]::IsNullOrEmpty($root) -or -not (Test-Path (Join-Path $root "config.toml"))) {
-    Write-Host "找不到專案根目錄(config.toml)。請 cd 到 zola_blog 再執行 .\deploy.ps1" -ForegroundColor Red
-    exit 1
-}
+# 專案根目錄(寫死,這台機器固定路徑)
+$root = "C:\Users\JLM\Desktop\zola_blog"
 Set-Location $root
 
 $remote = git remote get-url origin 2>$null
@@ -57,6 +51,7 @@ New-Item -ItemType File -Path (Join-Path $deploy ".nojekyll") -Force | Out-Null
 
 Push-Location $deploy
 git init -q
+git remote add origin $remote
 git checkout -q -b master
 git add -A
 git commit -q -m "Deploy: $Message"
