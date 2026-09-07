@@ -2,6 +2,9 @@
 /public
 /public_prod
 
+# deploy 暫存區
+/.deploy
+
 # 測試/暫存
 *.tmp
 *.log
