@@ -35,13 +35,19 @@ if (git status --porcelain) {
 git push origin main
 
 Write-Host "==> 3/4 publish output to master" -ForegroundColor Cyan
+# master 只放 build 產物。用 orphan worktree 確保不含原始碼 / .gitmodules,
+# 否則 GitHub Pages 會誤以為有 submodule 而去 clone theme(依賴 codeberg,會壞)。
 $tmp = Join-Path $env:TEMP ("zola_deploy_" + (Get-Random))
 git worktree add -q --detach $tmp
 
 $ok = $true
 try {
-    Copy-Item "$root\public\*" $tmp -Recurse -Force
     Set-Location $tmp
+    # 清掉 worktree 裡從 main 帶進來的所有檔案(含 .gitmodules / 原始碼)
+    git rm -rq . 2>$null
+    Get-ChildItem $tmp -Force | Where-Object { $_.Name -ne ".git" } | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+    # 只放 build 產物
+    Copy-Item "$root\public\*" $tmp -Recurse -Force
     New-Item -ItemType File -Path (Join-Path $tmp ".nojekyll") -Force | Out-Null
     git add -A
     if (git status --porcelain) {
