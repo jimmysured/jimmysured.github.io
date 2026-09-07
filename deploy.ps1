@@ -1,10 +1,10 @@
-# deploy.ps1 - Zola blog publish
+# deploy.ps1 - Zola blog publish (ASCII only, no Chinese to avoid encoding bugs)
 #
 #   .\deploy.ps1
 #   .\deploy.ps1 -Message "add CRTE review"
 #
 # main   = source (backup, normal history)
-# master = built output only (force-pushed each deploy, no history kept)
+# master = built output only (force-pushed each deploy)
 
 param(
     [string]$Message = "Update site $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
@@ -12,7 +12,6 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-# 專案根目錄(寫死,這台機器固定路徑)
 $root = "C:\Users\JLM\Desktop\zola_blog"
 Set-Location $root
 
@@ -37,9 +36,8 @@ if (git status --porcelain) {
 git push origin main
 
 Write-Host "==> 3/4 publish output to master" -ForegroundColor Cyan
-# 用獨立的 .deploy 資料夾(全新 git repo,只裝 public 內容),
-# force push 到 master。這樣 master 只有純產物,不含原始碼 / .gitmodules,
-# GitHub Pages 就不會去 clone theme。
+# Fresh git repo in .deploy holding only the built output, force-pushed to master.
+# This keeps master free of source and .gitmodules so Pages never clones the theme.
 $deploy = Join-Path $root ".deploy"
 if (Test-Path $deploy) {
     Remove-Item $deploy -Recurse -Force
