@@ -37,7 +37,8 @@ git push origin main
 Write-Host "==> 3/4 publish output to master" -ForegroundColor Cyan
 # master 只放 build 產物。用 orphan worktree 確保不含原始碼 / .gitmodules,
 # 否則 GitHub Pages 會誤以為有 submodule 而去 clone theme(依賴 codeberg,會壞)。
-$tmp = Join-Path $env:TEMP ("zola_deploy_" + (Get-Random))
+$tmp = Join-Path ([System.IO.Path]::GetTempPath()) ("zola_deploy_" + (Get-Random))
+git worktree prune 2>$null
 git worktree add -q --detach $tmp
 
 $ok = $true
