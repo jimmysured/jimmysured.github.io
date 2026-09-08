@@ -1,0 +1,29 @@
+{% import "macros_list.html" as list %}
+{% extends "base.html" %}
+
+{% block title %}#{{ term.name }} | {{ super() }}{% endblock %}
+
+{%- block main -%}
+  <main>
+    <div class="term-head">
+      <h1 class="term-title">#{{ term.name }}</h1>
+      <p class="term-sub">
+        <a href="{{ get_url(path="@/blog/_index.md", lang=lang) }}">&larr; {{ trans(key="all_posts", lang=lang) }}</a>
+      </p>
+    </div>
+
+    {{ list::year_rail(pages=term.pages) | safe }}
+    {%- if term.pages | length %}
+      {{ list::archive(pages=term.pages) | safe }}
+    {%- else %}
+      <ul class="blog-posts"><li>{{ trans(key="no_posts", lang=lang) }}</li></ul>
+    {%- endif %}
+
+    <div class="tags">
+      {%- set tags = get_taxonomy(kind=taxonomy.name, lang=lang) %}
+      {%- for item in tags.items %}
+        <a href="{{ item.permalink }}"{% if item.name == term.name %} class="current"{% endif %}>#{{ item.name }}</a>&nbsp;
+      {%- endfor %}
+    </div>
+  </main>
+{% endblock %}

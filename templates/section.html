@@ -1,32 +1,15 @@
+{% import "macros_list.html" as list %}
 {% extends "base.html" %}
 
 {%- block main -%}
   <main>
-    {%- if taxonomy.term %}
-      <h3 class="filter">{{ trans(key="filtering_for",lang=lang)}} "{{ section.title }}"</h3>
-      <small>
-        <a href="{{ get_url(path="@/blog/_index.md", lang=lang) }}">{{ trans(key="remove_filter", lang=lang) }}</a>
-      </small>
+    {{ list::year_rail(pages=section.pages) | safe }}
+    {%- if section.pages | length %}
+      {{ list::archive(pages=section.pages) | safe }}
+    {%- else %}
+      <ul class="blog-posts"><li>{{ trans(key="no_posts", lang=lang) }}</li></ul>
     {%- endif %}
-    <ul class="blog-posts">
-      {%- for page in section.pages %}
-        <li>
-          <span class="post-date">
-            <time datetime="{{ page.date | date(format='%+') }}" pubdate>{{ page.date | date(format=config.extra.date_format) }}</time>
-          </span>
-          <span class="post-info">
-            <span class="post-title">
-              {%- if page.extra.lang %}<span class="lang-badge">{{ page.extra.lang | upper }}</span>{% endif %}
-              <a href="{{ page.permalink }}">{{ page.title }}</a>
-            </span>
-            {%- if page.description %}<span class="post-desc">{{ page.description }}</span>{% endif %}
-          </span>
-        </li>
-        {%- else %}
-        <li>{{ trans(key="no_posts", lang=lang) }}</li>
-      {%- endfor -%}
-    </ul>
-    <p class="lang-legend">ZH 中文&nbsp;&nbsp;·&nbsp;&nbsp;EN English</p>
+
     <div class="tags">
       {%- set taxonomy_group = section.extra.taxonomy_group | default(value="tags") %}
       {%- set tags = get_taxonomy(kind=taxonomy_group, lang=lang) %}

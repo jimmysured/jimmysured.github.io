@@ -1,0 +1,77 @@
+{#- 文章列表:頂部資訊列 + 年份分區 + 時間軸。section.html 與 taxonomy_single.html 共用。
+    pages 需已依日期新到舊排序。 -#}
+{% macro archive(pages) %}
+  {%- set_global years = [] %}
+  {%- for p in pages %}
+    {%- if p.year and p.year not in years %}
+      {%- set_global years = years | concat(with=p.year) %}
+    {%- endif %}
+  {%- endfor %}
+
+  <div class="list-head">
+    <div class="list-head-row">
+      <span class="list-meta">
+        {{ pages | length }} post{% if pages | length != 1 %}s{% endif %}
+        {%- if years | length %} &middot; {{ years | last }}-{{ years | first }}{% endif %}
+      </span>
+      <span class="lang-legend">
+        <span class="legend-item"><span class="lang-badge">ZH</span>chinese</span>
+        <span class="legend-item"><span class="lang-badge">EN</span>english</span>
+      </span>
+    </div>
+    {%- if years | length > 1 %}
+      <nav class="year-nav-inline">
+        {%- for y in years %}<a href="#y{{ y }}">{{ y }}</a>{% endfor %}
+      </nav>
+    {%- endif %}
+  </div>
+
+  {%- for y in years %}
+    {%- set posts = pages | filter(attribute="year", value=y) %}
+    <section class="year-block" id="y{{ y }}">
+      <h2 class="year-heading"><span>{{ y }}</span></h2>
+      <ul class="blog-posts timeline">
+        {%- for page in posts %}
+          <li>
+            {#- 年份由區塊標題交代,列表只留月日 -#}
+            <span class="post-date">
+              <time datetime="{{ page.date | date(format='%+') }}" pubdate>{{ page.date | date(format='%m-%d') }}</time>
+            </span>
+            <span class="post-info">
+              <span class="post-title">
+                {%- if page.extra.lang %}<span class="lang-badge">{{ page.extra.lang | upper }}</span>{% endif %}
+                <a href="{{ page.permalink }}">{{ page.title }}</a>
+              </span>
+              {%- if page.description %}<span class="post-desc">{{ page.description }}</span>{% endif %}
+            </span>
+          </li>
+        {%- endfor %}
+      </ul>
+    </section>
+  {%- endfor %}
+{% endmacro archive %}
+
+{#- 右側固定年份導覽(寬螢幕才顯示) -#}
+{% macro year_rail(pages) %}
+  {%- set_global years = [] %}
+  {%- for p in pages %}
+    {%- if p.year and p.year not in years %}
+      {%- set_global years = years | concat(with=p.year) %}
+    {%- endif %}
+  {%- endfor %}
+  {%- if years | length > 1 %}
+    <aside class="year-nav">
+      <span class="year-nav-title">Archive</span>
+      <ul>
+        {%- for y in years %}
+          <li>
+            <a href="#y{{ y }}">
+              <span class="year-nav-year">{{ y }}</span>
+              <span class="year-nav-count">{{ pages | filter(attribute="year", value=y) | length }}</span>
+            </a>
+          </li>
+        {%- endfor %}
+      </ul>
+    </aside>
+  {%- endif %}
+{% endmacro year_rail %}

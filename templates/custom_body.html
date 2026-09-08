@@ -32,3 +32,41 @@
 })();
 </script>
 {%- endif %}
+
+{#- 文章列表與標籤頁的年份導覽:捲到哪一年就標哪一年(側欄與橫向列同步)。 -#}
+{%- if (section and section.path == "/blog/") or term %}
+<script>
+(function () {
+  var navs = Array.prototype.slice.call(document.querySelectorAll('.year-nav, .year-nav-inline'));
+  if (!navs.length || !window.IntersectionObserver) return;
+
+  var map = {};
+  var targets = [];
+
+  navs.forEach(function (nav) {
+    Array.prototype.slice.call(nav.querySelectorAll('a')).forEach(function (a) {
+      var id = decodeURIComponent(a.hash || '').slice(1);
+      var el = id && document.getElementById(id);
+      if (!el) return;
+      if (!map[id]) { map[id] = []; targets.push(el); }
+      map[id].push(a);
+    });
+  });
+  if (!targets.length) return;
+
+  var current = null;
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting || current === e.target.id) return;
+      if (current && map[current]) {
+        map[current].forEach(function (a) { a.classList.remove('active'); });
+      }
+      current = e.target.id;
+      map[current].forEach(function (a) { a.classList.add('active'); });
+    });
+  }, { rootMargin: '0px 0px -72% 0px', threshold: 0 });
+
+  targets.forEach(function (t) { obs.observe(t); });
+})();
+</script>
+{%- endif %}

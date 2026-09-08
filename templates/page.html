@@ -4,7 +4,8 @@
 {% block title %}{{ page.title }} | {{ super() }}{% endblock %}
 
 {% block main %}
-  {%- if not page.extra.menu -%}
+  {#- hide_title:標題跟導覽列重複時(例如 About)就不印 -#}
+  {%- if not page.extra.menu and not page.extra.hide_title -%}
     <h1>{% if page.extra.lang %}<span class="lang-badge">{{ page.extra.lang | upper }}</span> {% endif %}{{ page.title }}</h1>
     {%- if page.date %}
       <p class="meta-inline">
