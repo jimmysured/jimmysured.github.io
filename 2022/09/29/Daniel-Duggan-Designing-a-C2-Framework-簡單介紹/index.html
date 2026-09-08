@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daniel Duggan - Designing a C2 Framework 簡介 | su Jimmy</title>
+  
+
+<meta name="title" content="Daniel Duggan - Designing a C2 Framework 簡介">
+<meta name="description" content="A summary of Rasta Mouse&#x27;s DEF CON talk on designing a C2 framework: the C2 model, language choice, and implant design patterns.">
+<meta name="author" content="su Jimmy">
+<link rel="canonical" href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/">
+
+<meta property="og:site_name" content="su Jimmy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Daniel Duggan - Designing a C2 Framework 簡介">
+<meta property="og:description" content="A summary of Rasta Mouse&#x27;s DEF CON talk on designing a C2 framework: the C2 model, language choice, and implant design patterns.">
+<meta property="og:url" content="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/">
+<meta property="article:published_time" content="2022-09-29T00:00:00+00:00">
+<meta property="article:tag" content="c2">
+<meta property="article:tag" content="red team">
+<meta property="article:tag" content="talk">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@jimmysured">
+<meta name="twitter:creator" content="@jimmysured">
+<meta name="twitter:title" content="Daniel Duggan - Designing a C2 Framework 簡介">
+<meta name="twitter:description" content="A summary of Rasta Mouse&#x27;s DEF CON talk on designing a C2 framework: the C2 model, language choice, and implant design patterns.">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+  
+  <link rel="alternate" type="application/atom+xml" title="su Jimmy" href="https://jimmysured.github.io/atom.xml">
+  <style>
+    :root {
+    --width: 800px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color: #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background-color: #01242e;
+      --heading-color: #eee;
+      --text-color: #ddd;
+      --link-color: #8cc2dd;
+      --visited-color: #8b6fcb;
+      --code-background-color: #000;
+      --code-color: #ddd;
+      --blockquote-color: #ccc;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  nav span.active {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  pre code {
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    display: block;
+    padding: 20px;
+    white-space: pre-wrap;
+    font-size: 0.875rem;
+    overflow-x: auto;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+  /* blog post list */
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+
+  .tags {
+    font-size: smaller;
+  }
+
+  .footnote-definition {
+    display: flex;
+    margin-top: 1em;
+  }
+  .footnote-definition-label {
+    margin-left: 1rem;
+    margin-right: 0.5rem;
+    vertical-align: baseline;
+  }
+  .footnote-definition-label::after {
+    content: "."
+  }
+  .footnote-definition > p {
+    margin: 0;
+  }
+
+  </style><style>
+  /* ---------- 圖片 ---------- */
+  main img {
+    display: block;
+    margin: 1.6em auto;
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  main figure { margin: 1.6em 0; }
+  main figure figcaption {
+    text-align: center;
+    font-size: 0.85em;
+    color: var(--text-color);
+    opacity: 0.75;
+    margin-top: 0.5em;
+  }
+
+  main img[alt^="inline"] {
+    display: inline-block;
+    margin: 0.5em;
+    max-width: 45%;
+  }
+
+  /* ---------- 右側浮動目錄 ---------- */
+  .toc-float {
+    position: fixed;
+    top: 100px;
+    left: calc(50% + (var(--width) / 2) + 44px);
+    width: 280px;
+    max-height: 74vh;
+    overflow-y: auto;
+    font-size: 0.92em;
+    line-height: 1.7;
+    padding-left: 18px;
+    border-left: 1px solid var(--code-background-color);
+    scrollbar-width: thin;
+  }
+
+  .toc-float .toc-title {
+    display: block;
+    font-size: 0.72em;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--heading-color);
+    opacity: 0.55;
+    margin-bottom: 1.1em;
+  }
+
+  .toc-float ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+
+  /* 第二層:縮排 + 縮小 + 淡一點 */
+  .toc-float ul ul {
+    padding-left: 14px;
+    margin-top: 0.35em;
+    margin-bottom: 0.6em;
+    font-size: 0.92em;
+  }
+  .toc-float ul ul a { opacity: 0.78; }
+
+  /* 第一層項目間距大一點 */
+  .toc-float > ul > li {
+    margin-bottom: 0.75em;
+  }
+  .toc-float ul ul li {
+    margin-bottom: 0.3em;
+  }
+
+  .toc-float a {
+    display: block;
+    color: var(--text-color);
+    text-decoration: none;
+    padding-left: 12px;
+    margin-left: -13px;
+    border-left: 2px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .toc-float a:hover {
+    color: var(--link-color);
+    border-left-color: var(--link-color);
+    text-decoration: none;
+  }
+
+  /* 捲到哪就標到哪 */
+  .toc-float a.active {
+    color: var(--link-color);
+    border-left-color: var(--link-color);
+    font-weight: 600;
+  }
+
+  /* 空間不夠就藏起來,改用內嵌版 */
+  @media (max-width: 1420px) {
+    .toc-float { display: none; }
+  }
+  @media (min-width: 1421px) {
+    .toc-inline { display: none; }
+  }
+
+  /* ---------- 左側 metadata rail ---------- */
+  .meta-rail {
+    display: none;                 /* 預設隱藏,夠寬才開 */
+    position: fixed;
+    top: 100px;
+    right: calc(50% + (var(--width) / 2) + 44px);
+    width: 200px;
+    text-align: right;             /* 靠右貼齊內文欄 */
+    font-size: 0.85em;
+    line-height: 1.6;
+  }
+
+  .meta-rail .meta-block {
+    margin-bottom: 1.6em;
+  }
+
+  .meta-rail .meta-label {
+    display: block;
+    font-size: 0.78em;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--heading-color);
+    opacity: 0.45;
+    margin-bottom: 0.35em;
+  }
+
+  .meta-rail time,
+  .meta-rail > .meta-block > span:not(.meta-label) {
+    font-variant-numeric: tabular-nums;
+    opacity: 0.85;
+  }
+
+  .meta-rail a {
+    display: block;
+    color: var(--text-color);
+    opacity: 0.85;
+    text-decoration: none;
+  }
+
+  .meta-rail a:hover {
+    color: var(--link-color);
+    opacity: 1;
+    text-decoration: underline;
+  }
+
+  /* 夠寬才顯示左欄;顯示時把內文裡重複的 metadata 收起來 */
+  @media (min-width: 1500px) {
+    .meta-rail { display: block; }
+    .meta-inline { display: none; }
+  }
+
+  h1, h2, h3, h4, h5, h6 { scroll-margin-top: 24px; }
+
+  /* ---------- About 的 Speaking / Certifications ----------
+     跟文章列表同一套語彙:左欄 + 時間軸 + 標題 + 淡化副行。 */
+  ul.cv-list {
+    --rail: 158px;
+    --gap: 0.85em;
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  ul.cv-list > li {
+    display: grid;
+    grid-template-columns: 150px 26px 1fr;
+    align-items: baseline;
+    margin: 0 0 0.85em;
+    padding: 0;
+  }
+
+  /* 國家跟標題同一行,不另起副行 */
+  ul.cv-list .cv-loc {
+    font-size: 0.88em;
+    opacity: 0.5;
+    white-space: nowrap;
+  }
+
+  /* 前面的空白靠原始碼換行,這裡只補後面,避免變成兩個空格 */
+  ul.cv-list .cv-loc::before { content: "\00b7"; margin-right: 0.35em; }
+
+  /* About 的年份區塊比文章列表密,因為每年只有兩三場 */
+  .cv-block + .cv-block { margin-top: 2.2em; }
+  .cv-block .year-heading { margin-bottom: 0.85em; }
+
+  ul.cv-list .cv-side {
+    font-size: 0.88em;
+    opacity: 0.65;
+    font-variant-numeric: tabular-nums;
+  }
+
+  ul.cv-list .cv-body {
+    grid-column: 3;
+    display: block;
+  }
+
+  ul.cv-list .cv-note {
+    display: block;
+    margin: 0.25em 0 0;
+    font-size: 0.88em;
+    line-height: 1.5;
+    opacity: 0.55;
+  }
+
+  /* 證照左欄要寬一點(Zero-Point Security) */
+  ul.cv-list.certs {
+    --rail: 176px;
+    --gap: 1.5em;
+  }
+
+  ul.cv-list.certs > li {
+    grid-template-columns: 168px 26px 1fr;
+    margin-bottom: 1.5em;
+  }
+
+  /* 證照代號:借用語言 badge 的外框樣式 */
+  .cert-badge {
+    display: inline-block;
+    margin-right: 0.6em;
+    padding: 0.05em 0.4em;
+    border: 1px solid var(--link-color);
+    border-radius: 3px;
+    font-size: 0.72em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    vertical-align: middle;
+    color: var(--link-color);
+    opacity: 0.7;
+  }
+
+  /* 窄螢幕改成上下排 */
+  @media (max-width: 720px) {
+    ul.cv-list > li,
+    ul.cv-list.certs > li {
+      display: block;
+      margin-bottom: 1.2em;
+    }
+    ul.cv-list .cv-side {
+      display: block;
+      margin-bottom: 0.15em;
+    }
+    /* 單欄排版下座標會歪掉,時間軸收掉 */
+    ul.cv-list > li::before,
+    ul.cv-list > li::after {
+      display: none;
+    }
+  }
+
+  /* ---------- 文章列表(日期 + 標題 + 簡介)---------- */
+  ul.blog-posts { line-height: 1.3; margin: 0.5em 0; }
+
+  ul.blog-posts li {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    align-items: baseline;
+    margin: 0 0 1.4em;
+    padding: 0;
+  }
+
+  ul.blog-posts li .post-date {
+    font-style: italic;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.7;
+    font-size: 0.9em;
+  }
+
+  ul.blog-posts li .post-info {
+    display: block;
+  }
+
+  ul.blog-posts li .post-desc {
+    display: block;
+    margin: 0.25em 0 0;
+    font-size: 0.92em;
+    line-height: 1.5;
+    opacity: 0.6;
+  }
+
+  /* ---------- 列表頂部資訊列 ---------- */
+  .list-head {
+    margin: 0.4em 0 3em;
+    padding-bottom: 0.85em;
+    border-bottom: 1px solid var(--code-background-color);
+  }
+
+  .list-head-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7em 1.4em;
+  }
+
+  .list-meta {
+    font-size: 0.78em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.45;
+  }
+
+  /* ---------- 年份區塊 ---------- */
+  .year-block { scroll-margin-top: 20px; }
+  .year-block + .year-block { margin-top: 3.6em; }
+
+  /* 大字年份 + 往右延伸的細線,當年份分隔 */
+  .year-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.65em;
+    margin: 0 0 1.35em;
+    font-size: 1.5em;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+    color: var(--heading-color);
+    opacity: 0.32;
+  }
+
+  .year-heading::after {
+    content: "";
+    flex: 1 1 auto;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.45;
+  }
+
+  /* ---------- 時間軸(文章列表與 About 共用)----------
+     --rail 是垂直線的 x 座標,--gap 是 li 的 margin-bottom,
+     兩個都由各清單依自己的欄寬與行距覆寫。 */
+  .timeline {
+    position: relative;
+    margin: 0;
+    list-style: none;
+    padding: 0;
+    --rail: 66px;
+    --gap: 1.4em;
+  }
+
+  .timeline > li { position: relative; }
+
+  /* 線一段一段接在圓點之間,不是整條畫在 ul 上 --
+     整條畫的話最後一筆的線會拖過圓點、垂到項目底部。 */
+  .timeline > li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: var(--rail);
+    top: calc(0.45em + 13px);
+    bottom: calc(3px - var(--gap) - 0.45em);
+    width: 1px;
+    background: var(--text-color);
+    opacity: 0.16;
+  }
+
+  .timeline > li::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--rail) - 3px);
+    top: 0.45em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 1.5px solid var(--link-color);
+    background: var(--background-color);
+    opacity: 0.5;
+    transition: opacity 0.15s ease, background-color 0.15s ease;
+  }
+
+  .timeline > li:hover::before {
+    opacity: 1;
+    background: var(--link-color);
+  }
+
+  /* 年份標題已交代年,列表只剩月日;中間空一欄讓出時間軸 */
+  .year-block ul.blog-posts li {
+    grid-template-columns: 58px 26px 1fr;
+  }
+
+  .year-block ul.blog-posts li .post-info { grid-column: 3; }
+
+  /* ---------- 右側年份導覽 ---------- */
+  .year-nav {
+    position: fixed;
+    top: 100px;
+    left: calc(50% + (var(--width) / 2) + 44px);
+    width: 150px;
+    max-height: 74vh;
+    overflow-y: auto;
+    font-size: 0.92em;
+    line-height: 1.7;
+    padding-left: 18px;
+    border-left: 1px solid var(--code-background-color);
+    scrollbar-width: thin;
+  }
+
+  .year-nav .year-nav-title {
+    display: block;
+    font-size: 0.72em;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--heading-color);
+    opacity: 0.55;
+    margin-bottom: 1.1em;
+  }
+
+  .year-nav ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+
+  .year-nav li { margin-bottom: 0.45em; }
+
+  .year-nav a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    color: var(--text-color);
+    text-decoration: none;
+    padding-left: 12px;
+    margin-left: -13px;
+    border-left: 2px solid transparent;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .year-nav a:hover {
+    color: var(--link-color);
+    border-left-color: var(--link-color);
+    text-decoration: none;
+  }
+
+  .year-nav a.active {
+    color: var(--link-color);
+    border-left-color: var(--link-color);
+    font-weight: 600;
+  }
+
+  .year-nav .year-nav-count {
+    opacity: 0.4;
+    font-size: 0.82em;
+  }
+
+  /* 窄螢幕的橫向年份列(放在頂部資訊列裡) */
+  .year-nav-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45em;
+    margin: 0.95em 0 0;
+  }
+
+  .year-nav-inline a {
+    padding: 0.1em 0.62em;
+    border: 1px solid var(--code-background-color);
+    border-radius: 3px;
+    font-size: 0.85em;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-color);
+    text-decoration: none;
+    opacity: 0.75;
+  }
+
+  .year-nav-inline a:hover,
+  .year-nav-inline a.active {
+    border-color: var(--link-color);
+    color: var(--link-color);
+    text-decoration: none;
+    opacity: 1;
+  }
+
+  /* 空間不夠就收掉固定側欄,改用橫向列 */
+  @media (max-width: 1420px) {
+    .year-nav { display: none; }
+  }
+  @media (min-width: 1421px) {
+    .year-nav-inline { display: none; }
+  }
+
+  /* ---------- 語言標記 ---------- */
+  .lang-badge {
+    display: inline-block;
+    min-width: 2.4em;
+    margin-right: 0.55em;
+    padding: 0.05em 0.3em;
+    border: 1px solid var(--link-color);
+    border-radius: 3px;
+    font-size: 0.62em;
+    font-weight: 600;
+    font-style: normal;
+    letter-spacing: 0.06em;
+    text-align: center;
+    vertical-align: middle;
+    color: var(--link-color);
+    opacity: 0.7;
+    text-transform: uppercase;
+  }
+  h1 .lang-badge {
+    font-size: 0.4em;
+  }
+
+  /* 語言說明:列表頂部的圖例,badge 用實際樣式當範例 */
+  .lang-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4em 1.15em;
+    margin: 0;
+    font-size: 0.82em;
+    opacity: 0.85;
+  }
+
+  .lang-legend .legend-item {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .lang-legend .lang-badge {
+    margin-right: 0.5em;
+    font-size: 0.85em;
+    opacity: 1;
+  }
+
+  /* ---------- 標籤頁標題 ---------- */
+  .term-head { margin-bottom: 1.4em; }
+
+  .term-title {
+    margin: 0;
+    font-size: 1.6em;
+    letter-spacing: 0.01em;
+  }
+
+  .term-sub {
+    margin: 0.3em 0 0;
+    font-size: 0.82em;
+    opacity: 0.5;
+  }
+
+  .tags a.current {
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 600px) {
+    ul.blog-posts li {
+      display: block;
+      margin-bottom: 0.8em;
+    }
+    /* 單欄排版下時間軸的座標會歪掉,直接收掉 */
+    .timeline > li::before,
+    .timeline > li::after {
+      display: none;
+    }
+  }
+
+  /* ---------- 文章簡介塊 ---------- */
+  .post-lead {
+    margin: 1.5em 0 2em;
+    padding: 0.2em 0 1.2em;
+    border-bottom: 1px solid var(--code-background-color);
+    font-size: 1.05em;
+    line-height: 1.7;
+    color: var(--text-color);
+    opacity: 0.82;
+  }
+
+  /* ---------- 社群連結 ---------- */
+  .social-links {
+    margin-top: 0.9em;
+    margin-bottom: 0.5em;
+    font-size: 0.9em;
+  }
+  .social-links a { margin: 0 7px; }
+</style>
+
+</head>
+<body>
+  <header>
+  <a href="https://jimmysured.github.io/" class="title">
+    <h1>su Jimmy</h1>
+  </a>
+  <nav aria-label="site">
+      <a href="https://jimmysured.github.io/">home</a>
+      <a href="https://jimmysured.github.io/blog/">blog</a>
+      <a href="https://jimmysured.github.io/about/">about</a>
+  </nav>
+</header>
+<h1><span class="lang-badge">ZH</span> Daniel Duggan - Designing a C2 Framework 簡介</h1>
+      <p class="meta-inline">
+        <i>
+          <time datetime="2022-09-29T00:00:00+00:00" pubdate>2022-09-29</time>
+        </i>
+      </p>
+    <aside class="meta-rail">
+      <div class="meta-block">
+        <span class="meta-label">Published</span>
+        <time datetime="2022-09-29T00:00:00+00:00">2022-09-29</time>
+      </div>
+        <div class="meta-block">
+          <span class="meta-label">Tags</span>
+            <a href="https://jimmysured.github.io/tags/c2/">#c2</a>
+            <a href="https://jimmysured.github.io/tags/red-team/">#red team</a>
+            <a href="https://jimmysured.github.io/tags/talk/">#talk</a>
+        </div>
+        <div class="meta-block">
+          <span class="meta-label">Reading</span>
+          <span>5 min</span>
+        </div>
+    </aside><aside class="toc-float">
+      <span class="toc-title">Table of contents</span>
+    <ul>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#intro">Intro</a>
+        <ul>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#c2-model">C2 Model</a>
+            </li>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#c2-framework">C2 != Framework</a>
+            </li>
+        </ul>
+        </li>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#which-language">Which Language</a>
+        <ul>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#server">Server</a>
+            </li>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#implant">Implant</a>
+            </li>
+        </ul>
+        </li>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#design-patterns">Design Patterns</a>
+        <ul>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#command-design-pattern">Command Design Pattern</a>
+            </li>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#template-method-pattern">Template Method Pattern</a>
+            </li>
+        </ul>
+        </li>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#base-primitives-command-proliferation">Base Primitives &gt; Command Proliferation</a>
+        </li>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#jie-yu">結語</a>
+        </li>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#reference">Reference</a>
+        </li>
+    </ul>
+    </aside><details class="toc-inline" >
+      <summary>Table of contents</summary>
+    <ul>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#intro">Intro</a>
+        <ul>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#c2-model">C2 Model</a>
+            </li>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#c2-framework">C2 != Framework</a>
+            </li>
+        </ul>
+        </li>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#which-language">Which Language</a>
+        <ul>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#server">Server</a>
+            </li>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#implant">Implant</a>
+            </li>
+        </ul>
+        </li>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#design-patterns">Design Patterns</a>
+        <ul>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#command-design-pattern">Command Design Pattern</a>
+            </li>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#template-method-pattern">Template Method Pattern</a>
+            </li>
+        </ul>
+        </li>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#base-primitives-command-proliferation">Base Primitives &gt; Command Proliferation</a>
+        </li>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#jie-yu">結語</a>
+        </li>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/29/Daniel-Duggan-Designing-a-C2-Framework-簡單介紹/#reference">Reference</a>
+        </li>
+    </ul>
+    </details>
+    <div class="post-lead">A summary of Rasta Mouse&#x27;s DEF CON talk on designing a C2 framework: the C2 model, language choice, and implant design patterns.</div>
+
+  <main>
+    <p>這篇文章是簡單統整 <a href="https://twitter.com/_RastaMouse">Rasta Mouse</a>, CRTO 的作者, 在去年的 DEFCON 分享如何構建一個 C2 框架的議程, 並且有基於此議程, 實際教導如何使用 C# 來構建一個 C2 框架的<a href="https://training.zeropointsecurity.co.uk/courses/c2-development-in-csharp">課程</a></p>
+<span id="continue-reading"></span><h1 id="intro">Intro</h1>
+<ul>
+<li>可以透過 <a href="https://www.thec2matrix.com/">C2 Matrix</a> 來尋找符合自己要求的 C2</li>
+</ul>
+<h2 id="c2-model">C2 Model</h2>
+<ul>
+<li>
+<p><strong>Operators &lt;-&gt; Control Server (aka "Team Sever") &lt;-&gt; Target (with implant)</strong></p>
+<ul>
+<li><strong>Operators</strong>:
+<ul>
+<li>會對 Target 發送 implant (可以想像成 payload, RAT), 並需要持續的對 implant 進行控制</li>
+<li>會有一個獨立的 client, 讓 Operator 可以透過類似 admin interface 和 Control Server 互動</li>
+<li>會透過給 Control Server 任務, 藉此來給 implant 指令</li>
+</ul>
+</li>
+<li><strong>Target (with implant)</strong>:
+<ul>
+<li>Target 上的 implant 會透過 HTTP 或 DNS 之類的協定和 Control Server 通訊, 藉此來和 Operators 進行互動</li>
+<li>Implant 接收到 Operators, 也就是 Control Server 的指令後, 需要返回執行指令的結果給 Control Server 讓 Operators 能夠觀看結果</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>這邊如果想要更簡化, 可以<strong>直接地把 Control Server 當作 Operator</strong></p>
+</li>
+<li>
+<p>那中間會有 Control Server 的原因是因為, 通常使用到 C2 Framework 時, 除非你是 one man army, 不然通常都是<strong>大於兩個人</strong>在使用 C2 Framework, 如果沒有一個 Control Server 在中間提供一個<strong>統一且同步</strong>的媒介, 可能會<strong>讓行動變得很複雜</strong></p>
+<ul>
+<li>舉例來說, 有 A, B 兩個人要對一個 AD 進行滲透測試 or 紅隊演練, 如果沒有 Control Server, 會有以下的問題
+<ol>
+<li><strong>行動很難統一和同步</strong>
+<ul>
+<li>B 可能沒辦法和 A 丟到 Target C 的 implant 進行互動, 那可能 B 還要再丟另一個 implant 到 Target C 或是另外想一個方法和 A 丟進去的 implant 進行互動</li>
+<li>如果有 Control Server, 可以提供一個統一的媒介, 讓 A, B 可以透過 Control Server 生成一個 implant 並丟到 Target C 上, 接下來 A, B 只要和 Control Server 進行通訊, 就可以和 Target C 進行互動</li>
+</ul>
+</li>
+<li><strong>行動很難追蹤和還原</strong>
+<ul>
+<li>如果 A, B 都是透過自己的電腦來進行行動的話, 若後續客戶需要對做過的攻擊進行查證, 可能會讓查證的過程過的很複雜甚至無法進行查證</li>
+<li>如果有 Control Server 的話, A, B 對 implant 做的任何互動以及行為都會被 Control Server 記錄下來, 可以直接透過 log 來進行查證</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>
+<p>如果以上很難想像, 可以考一樣也是這位作者出的證照, <a href="https://training.zeropointsecurity.co.uk/courses/red-team-ops">CRTO</a>, 因為 CRTO 所帶到的內容會讓你對 Red Team, C2 有基礎的瞭解, 我也有寫一篇<a href="https://jimmysured.github.io/2022/09/25/CRTO_Certificate_Review/">心得文</a>可以參考</p>
+</li>
+</ul>
+<h2 id="c2-framework">C2 != Framework</h2>
+<ul>
+<li>
+<p>C2 不等於 C2 Framework</p>
+</li>
+<li>
+<p>C2 Framework 提供以下功能</p>
+<ul>
+<li><strong>Inversion of control</strong>
+<ul>
+<li>降低 Operators 和 Implant 之間的<strong>耦合度</strong></li>
+</ul>
+</li>
+<li><strong>Default behaviours</strong>
+<ul>
+<li>提供預設的行為給 Operators, 像是上面舉例的透過 HTTP 或 DNS 進行通訊, 並提供使用者修改這些 Default behaviours 的能力 (e.g., Cobalt Strike 中的 Malleable C2 profile)</li>
+</ul>
+</li>
+<li><strong>Extensibility (without modifying the core)</strong>
+<ul>
+<li>讓使用者可以在不修改核心程式碼的情況下, 新增原先沒有的功能, 行為</li>
+</ul>
+</li>
+<li><strong>Reusable components</strong>
+<ul>
+<li>應該不用多做解釋 XD</li>
+</ul>
+</li>
+</ul>
+<h3 id="example-metasploit">Example (Metasploit)</h3>
+<ul>
+<li>Metasploit 為一個較為成熟的框架, 任何人都可以自己寫一個 module 到 Metasploit, 因此作者在這邊拿 Metasploit 中的 <a href="https://github.com/rapid7/metasploit-framework/blob/master/modules/exploits/windows/smb/psexec.rb">psexec.rb</a> 做介紹
+<ol>
+<li>
+<p><strong>Define module info</strong></p>
+<ul>
+<li>在 module 中提供漏洞名稱, 作者名稱, 對該 module 的描述, 參考資料等資訊, 方便使用者, 也就是 Operators 進行查找</li>
+<li><img src="/img/c2_1.png" alt="" /></li>
+</ul>
+</li>
+<li>
+<p><strong>Register options</strong></p>
+<ul>
+<li>一些對 module 來說很重要的選項, 像是 service 名稱, PowerShell 的路徑等</li>
+<li><img src="/img/c2_2.png" alt="" /></li>
+</ul>
+</li>
+<li>
+<p><strong>Includes &amp; Helpers</strong></p>
+<ul>
+<li>因為這個檔案有 include smb, 所以可以不用在你的 module 中自己寫一個 smb library, 以此類推</li>
+<li><img src="/img/c2_3.png" alt="" /></li>
+<li>如果沒有提供檔案名稱, module 會幫助你將傳過去的檔案以英文亂碼命名, 那 <code>rand_text_alpha()</code> 也是 framework 定義好的 module, 所以就不用特意去思考說還要在寫一個產生英文亂碼的 module, 因為 framework 都幫你寫好了</li>
+<li><img src="/img/c2_4.png" alt="" /></li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="which-language">Which Language</h1>
+<h2 id="server">Server</h2>
+<ul>
+<li>
+<p><strong>Python</strong></p>
+<ul>
+<li>Flask, Django</li>
+</ul>
+</li>
+<li>
+<p><strong>ASP.NET Core (C#)</strong></p>
+<ul>
+<li>Blazor, Web API, gRPC</li>
+</ul>
+</li>
+<li>
+<p>Others</p>
+<ul>
+<li>Vue.js, React, Angular</li>
+</ul>
+</li>
+</ul>
+<h2 id="implant">Implant</h2>
+<ul>
+<li>
+<p><strong>OS specific</strong></p>
+<ul>
+<li>C# (.NET Framework), Swift</li>
+</ul>
+</li>
+<li>
+<p><strong>Cross-compilation</strong></p>
+<ul>
+<li>Nim, Rust, Go</li>
+</ul>
+</li>
+<li>
+<p><strong>Cross-platform</strong></p>
+<ul>
+<li>.NET, .NET Core, Python</li>
+</ul>
+</li>
+</ul>
+<h1 id="design-patterns">Design Patterns</h1>
+<h2 id="command-design-pattern">Command Design Pattern</h2>
+<ul>
+<li>
+<p><img src="/img/c2_5.png" alt="" /></p>
+<ol>
+<li>可以將 Operator 算是 client, 透過 <strong>Task (Guid implant)</strong> 函式, 將 Task, Command, Argument 傳送到 Server, 也就是 director</li>
+<li>接著 Server 透過 <strong>SendTask()</strong> 函式, 將 Task, TaskGuid, Command, Argument 傳送到 Task, 也就是 command</li>
+<li>接著 Task 透過 <strong>ExecuteTask()</strong> 函式, 在 implant, 也就是 receiver 上執行 task</li>
+</ol>
+</li>
+<li>
+<p>在上圖會注意到 <strong>TaskGuid</strong> 被特別框起來, 被框起來的原因是因為, server 會做這件事, 但不是在這個 model 中, 有 TaskGuid 的原因是因為要追蹤 Task <strong>執行的進度</strong>或是<strong>結果</strong>, 當 implant, 也就是 receiver 執行指令後, 會回傳訊息, 這時候 Server 可以直接透過 Guid 去做查詢</p>
+<h3 id="contracts">Contracts</h3>
+<ul>
+<li><strong>不要在不同的 element 中使用同一個 model</strong></li>
+<li>Operator &lt;-&gt; Server</li>
+<li>Server &lt;-&gt; Implant</li>
+<li>Server &lt;-&gt; Storage</li>
+</ul>
+</li>
+</ul>
+<h2 id="template-method-pattern">Template Method Pattern</h2>
+<ul>
+<li><img src="/img/c2_6.png" alt="" />
+<ul>
+<li>當設計完 Abstract Class, Listenr, 之後, 後續如果自己或是其他人想寫客製化 module, 可以不用思考其背後運作原理, 只要呼叫 Abstract Class 裡面的 method 即可</li>
+<li>詳細例子可以參考議程影片的這個部分, 作者舉的例子很清楚</li>
+</ul>
+</li>
+</ul>
+<h1 id="base-primitives-command-proliferation">Base Primitives &gt; Command Proliferation</h1>
+<ul>
+<li>
+<p><strong>Base Primitives</strong></p>
+<ul>
+<li>Shell/PowerShell Execution</li>
+<li>(.NET) Reflection</li>
+<li>Reflective DLLs</li>
+<li>Manuel Mapping</li>
+<li>Sockets</li>
+</ul>
+</li>
+<li>
+<p><strong>Commands</strong></p>
+<ul>
+<li>ls, cd, pwd, whoami, ...</li>
+<li>Seatbelt</li>
+<li>Rubeus</li>
+<li>Mimikatz</li>
+</ul>
+</li>
+<li>
+<p>作者認為, <strong>base primitves 比起 command 較佳</strong>. 雖然在 C2 Framework 中能直接使用 command 很方便, 但當 Operator 想使用客製化的工具或是攻擊手法時, base primitves 是較佳的選擇.</p>
+</li>
+<li>
+<p>作者在這邊提出 command 的幾個缺點:</p>
+<ul>
+<li>非常沒有彈性</li>
+<li>很難進行維護和擴充</li>
+<li>很難 handle exception</li>
+<li>程式碼會重複</li>
+<li>效能不太高</li>
+<li>所有東西都是字串</li>
+<li>很醜</li>
+</ul>
+</li>
+<li>
+<p>比較好的方式, 是將這些 command <strong>抽象化</strong> (Abstract)</p>
+</li>
+</ul>
+<h1 id="jie-yu">結語</h1>
+<ul>
+<li>這邊很推薦想自己寫一個 C2 Framework 或是想了解 C2 背後運作原理的人去看這個議程, 因為我這篇文章只是簡單概述, 影片中有講到其他比較深入的內容, 像是設計 C2 時該注意的事, 設計 C2 時的心態, 對 Design Pattern 更深入地解說等內容</li>
+<li>那如果對設計一個 C2 Framework 很感興趣, 也可以去參考作者的 <strong><a href="https://training.zeropointsecurity.co.uk/courses/c2-development-in-csharp">C2 Development in C#</a></strong> 這門課, 那作者有說近期收到蠻多 feedback, 要對課程做一個大更新, 有興趣的可以先買起來放著, 等更新再看</li>
+</ul>
+<h1 id="reference">Reference</h1>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=oasBguDw_Ho">https://www.youtube.com/watch?v=oasBguDw_Ho</a></li>
+</ul>
+
+  </main>
+
+  <p class="meta-inline">
+        Categories:
+          <a href="https://jimmysured.github.io/categories/technique/">#Technique</a>
+        Tags:
+          <a href="https://jimmysured.github.io/tags/c2/">#c2</a>
+          <a href="https://jimmysured.github.io/tags/red-team/">#red team</a>
+          <a href="https://jimmysured.github.io/tags/talk/">#talk</a>
+  </p>
+<footer>
+    <div class="social-links">
+        <a href="https:&#x2F;&#x2F;github.com&#x2F;jimmysured" rel="me noopener" target="_blank">GitHub</a>
+        <a href="https:&#x2F;&#x2F;x.com&#x2F;jimmysured" rel="me noopener" target="_blank">X</a>
+        <a href="https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;jiun-ming-su-828a0419b&#x2F;" rel="me noopener" target="_blank">LinkedIn</a>
+        <a href="https://jimmysured.github.io/atom.xml">RSS</a>
+    </div>
+    <div>
+      Made with <a href="https://codeberg.org/alinnow/zola-bearblog">Zola ʕ•ᴥ•ʔ Bear</a>
+    </div>
+</footer>
+
+<script>
+(function () {
+  var toc = document.querySelector('.toc-float');
+  if (!toc || !window.IntersectionObserver) return;
+
+  var links = Array.prototype.slice.call(toc.querySelectorAll('a'));
+  var map = {};
+  var targets = [];
+
+  links.forEach(function (a) {
+    var id = decodeURIComponent(a.hash || '').slice(1);
+    var el = id && document.getElementById(id);
+    if (el) { map[id] = a; targets.push(el); }
+  });
+  if (!targets.length) return;
+
+  var current = null;
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var a = map[e.target.id];
+      if (!a || a === current) return;
+      if (current) current.classList.remove('active');
+      a.classList.add('active');
+      current = a;
+    });
+  }, { rootMargin: '0px 0px -72% 0px', threshold: 0 });
+
+  targets.forEach(function (t) { obs.observe(t); });
+})();
+</script>
+</body>
+</html>

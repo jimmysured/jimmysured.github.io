@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diamond Ticket &amp; Sapphire Ticket | su Jimmy</title>
+  
+
+<meta name="title" content="Diamond Ticket &amp; Sapphire Ticket">
+<meta name="description" content="An intro to Diamond and Sapphire Tickets, how they differ from Golden and Silver Tickets, and why they are hard to detect.">
+<meta name="author" content="su Jimmy">
+<link rel="canonical" href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/">
+
+<meta property="og:site_name" content="su Jimmy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Diamond Ticket &amp; Sapphire Ticket">
+<meta property="og:description" content="An intro to Diamond and Sapphire Tickets, how they differ from Golden and Silver Tickets, and why they are hard to detect.">
+<meta property="og:url" content="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/">
+<meta property="article:published_time" content="2022-09-28T00:00:00+00:00">
+<meta property="article:tag" content="active directory">
+<meta property="article:tag" content="red team">
+<meta property="article:tag" content="pentest">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@jimmysured">
+<meta name="twitter:creator" content="@jimmysured">
+<meta name="twitter:title" content="Diamond Ticket &amp; Sapphire Ticket">
+<meta name="twitter:description" content="An intro to Diamond and Sapphire Tickets, how they differ from Golden and Silver Tickets, and why they are hard to detect.">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+  
+  <link rel="alternate" type="application/atom+xml" title="su Jimmy" href="https://jimmysured.github.io/atom.xml">
+  <style>
+    :root {
+    --width: 800px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color: #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background-color: #01242e;
+      --heading-color: #eee;
+      --text-color: #ddd;
+      --link-color: #8cc2dd;
+      --visited-color: #8b6fcb;
+      --code-background-color: #000;
+      --code-color: #ddd;
+      --blockquote-color: #ccc;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  nav span.active {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  pre code {
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    display: block;
+    padding: 20px;
+    white-space: pre-wrap;
+    font-size: 0.875rem;
+    overflow-x: auto;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+  /* blog post list */
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+
+  .tags {
+    font-size: smaller;
+  }
+
+  .footnote-definition {
+    display: flex;
+    margin-top: 1em;
+  }
+  .footnote-definition-label {
+    margin-left: 1rem;
+    margin-right: 0.5rem;
+    vertical-align: baseline;
+  }
+  .footnote-definition-label::after {
+    content: "."
+  }
+  .footnote-definition > p {
+    margin: 0;
+  }
+
+  </style><style>
+  /* ---------- 圖片 ---------- */
+  main img {
+    display: block;
+    margin: 1.6em auto;
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  main figure { margin: 1.6em 0; }
+  main figure figcaption {
+    text-align: center;
+    font-size: 0.85em;
+    color: var(--text-color);
+    opacity: 0.75;
+    margin-top: 0.5em;
+  }
+
+  main img[alt^="inline"] {
+    display: inline-block;
+    margin: 0.5em;
+    max-width: 45%;
+  }
+
+  /* ---------- 右側浮動目錄 ---------- */
+  .toc-float {
+    position: fixed;
+    top: 100px;
+    left: calc(50% + (var(--width) / 2) + 44px);
+    width: 280px;
+    max-height: 74vh;
+    overflow-y: auto;
+    font-size: 0.92em;
+    line-height: 1.7;
+    padding-left: 18px;
+    border-left: 1px solid var(--code-background-color);
+    scrollbar-width: thin;
+  }
+
+  .toc-float .toc-title {
+    display: block;
+    font-size: 0.72em;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--heading-color);
+    opacity: 0.55;
+    margin-bottom: 1.1em;
+  }
+
+  .toc-float ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+
+  /* 第二層:縮排 + 縮小 + 淡一點 */
+  .toc-float ul ul {
+    padding-left: 14px;
+    margin-top: 0.35em;
+    margin-bottom: 0.6em;
+    font-size: 0.92em;
+  }
+  .toc-float ul ul a { opacity: 0.78; }
+
+  /* 第一層項目間距大一點 */
+  .toc-float > ul > li {
+    margin-bottom: 0.75em;
+  }
+  .toc-float ul ul li {
+    margin-bottom: 0.3em;
+  }
+
+  .toc-float a {
+    display: block;
+    color: var(--text-color);
+    text-decoration: none;
+    padding-left: 12px;
+    margin-left: -13px;
+    border-left: 2px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .toc-float a:hover {
+    color: var(--link-color);
+    border-left-color: var(--link-color);
+    text-decoration: none;
+  }
+
+  /* 捲到哪就標到哪 */
+  .toc-float a.active {
+    color: var(--link-color);
+    border-left-color: var(--link-color);
+    font-weight: 600;
+  }
+
+  /* 空間不夠就藏起來,改用內嵌版 */
+  @media (max-width: 1420px) {
+    .toc-float { display: none; }
+  }
+  @media (min-width: 1421px) {
+    .toc-inline { display: none; }
+  }
+
+  /* ---------- 左側 metadata rail ---------- */
+  .meta-rail {
+    display: none;                 /* 預設隱藏,夠寬才開 */
+    position: fixed;
+    top: 100px;
+    right: calc(50% + (var(--width) / 2) + 44px);
+    width: 200px;
+    text-align: right;             /* 靠右貼齊內文欄 */
+    font-size: 0.85em;
+    line-height: 1.6;
+  }
+
+  .meta-rail .meta-block {
+    margin-bottom: 1.6em;
+  }
+
+  .meta-rail .meta-label {
+    display: block;
+    font-size: 0.78em;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--heading-color);
+    opacity: 0.45;
+    margin-bottom: 0.35em;
+  }
+
+  .meta-rail time,
+  .meta-rail > .meta-block > span:not(.meta-label) {
+    font-variant-numeric: tabular-nums;
+    opacity: 0.85;
+  }
+
+  .meta-rail a {
+    display: block;
+    color: var(--text-color);
+    opacity: 0.85;
+    text-decoration: none;
+  }
+
+  .meta-rail a:hover {
+    color: var(--link-color);
+    opacity: 1;
+    text-decoration: underline;
+  }
+
+  /* 夠寬才顯示左欄;顯示時把內文裡重複的 metadata 收起來 */
+  @media (min-width: 1500px) {
+    .meta-rail { display: block; }
+    .meta-inline { display: none; }
+  }
+
+  h1, h2, h3, h4, h5, h6 { scroll-margin-top: 24px; }
+
+  /* ---------- About 的 Speaking / Certifications ----------
+     跟文章列表同一套語彙:左欄 + 時間軸 + 標題 + 淡化副行。 */
+  ul.cv-list {
+    --rail: 158px;
+    --gap: 0.85em;
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  ul.cv-list > li {
+    display: grid;
+    grid-template-columns: 150px 26px 1fr;
+    align-items: baseline;
+    margin: 0 0 0.85em;
+    padding: 0;
+  }
+
+  /* 國家跟標題同一行,不另起副行 */
+  ul.cv-list .cv-loc {
+    font-size: 0.88em;
+    opacity: 0.5;
+    white-space: nowrap;
+  }
+
+  /* 前面的空白靠原始碼換行,這裡只補後面,避免變成兩個空格 */
+  ul.cv-list .cv-loc::before { content: "\00b7"; margin-right: 0.35em; }
+
+  /* About 的年份區塊比文章列表密,因為每年只有兩三場 */
+  .cv-block + .cv-block { margin-top: 2.2em; }
+  .cv-block .year-heading { margin-bottom: 0.85em; }
+
+  ul.cv-list .cv-side {
+    font-size: 0.88em;
+    opacity: 0.65;
+    font-variant-numeric: tabular-nums;
+  }
+
+  ul.cv-list .cv-body {
+    grid-column: 3;
+    display: block;
+  }
+
+  ul.cv-list .cv-note {
+    display: block;
+    margin: 0.25em 0 0;
+    font-size: 0.88em;
+    line-height: 1.5;
+    opacity: 0.55;
+  }
+
+  /* 證照左欄要寬一點(Zero-Point Security) */
+  ul.cv-list.certs {
+    --rail: 176px;
+    --gap: 1.5em;
+  }
+
+  ul.cv-list.certs > li {
+    grid-template-columns: 168px 26px 1fr;
+    margin-bottom: 1.5em;
+  }
+
+  /* 證照代號:借用語言 badge 的外框樣式 */
+  .cert-badge {
+    display: inline-block;
+    margin-right: 0.6em;
+    padding: 0.05em 0.4em;
+    border: 1px solid var(--link-color);
+    border-radius: 3px;
+    font-size: 0.72em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    vertical-align: middle;
+    color: var(--link-color);
+    opacity: 0.7;
+  }
+
+  /* 窄螢幕改成上下排 */
+  @media (max-width: 720px) {
+    ul.cv-list > li,
+    ul.cv-list.certs > li {
+      display: block;
+      margin-bottom: 1.2em;
+    }
+    ul.cv-list .cv-side {
+      display: block;
+      margin-bottom: 0.15em;
+    }
+    /* 單欄排版下座標會歪掉,時間軸收掉 */
+    ul.cv-list > li::before,
+    ul.cv-list > li::after {
+      display: none;
+    }
+  }
+
+  /* ---------- 文章列表(日期 + 標題 + 簡介)---------- */
+  ul.blog-posts { line-height: 1.3; margin: 0.5em 0; }
+
+  ul.blog-posts li {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    align-items: baseline;
+    margin: 0 0 1.4em;
+    padding: 0;
+  }
+
+  ul.blog-posts li .post-date {
+    font-style: italic;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.7;
+    font-size: 0.9em;
+  }
+
+  ul.blog-posts li .post-info {
+    display: block;
+  }
+
+  ul.blog-posts li .post-desc {
+    display: block;
+    margin: 0.25em 0 0;
+    font-size: 0.92em;
+    line-height: 1.5;
+    opacity: 0.6;
+  }
+
+  /* ---------- 列表頂部資訊列 ---------- */
+  .list-head {
+    margin: 0.4em 0 3em;
+    padding-bottom: 0.85em;
+    border-bottom: 1px solid var(--code-background-color);
+  }
+
+  .list-head-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7em 1.4em;
+  }
+
+  .list-meta {
+    font-size: 0.78em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.45;
+  }
+
+  /* ---------- 年份區塊 ---------- */
+  .year-block { scroll-margin-top: 20px; }
+  .year-block + .year-block { margin-top: 3.6em; }
+
+  /* 大字年份 + 往右延伸的細線,當年份分隔 */
+  .year-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.65em;
+    margin: 0 0 1.35em;
+    font-size: 1.5em;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+    color: var(--heading-color);
+    opacity: 0.32;
+  }
+
+  .year-heading::after {
+    content: "";
+    flex: 1 1 auto;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.45;
+  }
+
+  /* ---------- 時間軸(文章列表與 About 共用)----------
+     --rail 是垂直線的 x 座標,--gap 是 li 的 margin-bottom,
+     兩個都由各清單依自己的欄寬與行距覆寫。 */
+  .timeline {
+    position: relative;
+    margin: 0;
+    list-style: none;
+    padding: 0;
+    --rail: 66px;
+    --gap: 1.4em;
+  }
+
+  .timeline > li { position: relative; }
+
+  /* 線一段一段接在圓點之間,不是整條畫在 ul 上 --
+     整條畫的話最後一筆的線會拖過圓點、垂到項目底部。 */
+  .timeline > li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: var(--rail);
+    top: calc(0.45em + 13px);
+    bottom: calc(3px - var(--gap) - 0.45em);
+    width: 1px;
+    background: var(--text-color);
+    opacity: 0.16;
+  }
+
+  .timeline > li::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--rail) - 3px);
+    top: 0.45em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 1.5px solid var(--link-color);
+    background: var(--background-color);
+    opacity: 0.5;
+    transition: opacity 0.15s ease, background-color 0.15s ease;
+  }
+
+  .timeline > li:hover::before {
+    opacity: 1;
+    background: var(--link-color);
+  }
+
+  /* 年份標題已交代年,列表只剩月日;中間空一欄讓出時間軸 */
+  .year-block ul.blog-posts li {
+    grid-template-columns: 58px 26px 1fr;
+  }
+
+  .year-block ul.blog-posts li .post-info { grid-column: 3; }
+
+  /* ---------- 右側年份導覽 ---------- */
+  .year-nav {
+    position: fixed;
+    top: 100px;
+    left: calc(50% + (var(--width) / 2) + 44px);
+    width: 150px;
+    max-height: 74vh;
+    overflow-y: auto;
+    font-size: 0.92em;
+    line-height: 1.7;
+    padding-left: 18px;
+    border-left: 1px solid var(--code-background-color);
+    scrollbar-width: thin;
+  }
+
+  .year-nav .year-nav-title {
+    display: block;
+    font-size: 0.72em;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--heading-color);
+    opacity: 0.55;
+    margin-bottom: 1.1em;
+  }
+
+  .year-nav ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+
+  .year-nav li { margin-bottom: 0.45em; }
+
+  .year-nav a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    color: var(--text-color);
+    text-decoration: none;
+    padding-left: 12px;
+    margin-left: -13px;
+    border-left: 2px solid transparent;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .year-nav a:hover {
+    color: var(--link-color);
+    border-left-color: var(--link-color);
+    text-decoration: none;
+  }
+
+  .year-nav a.active {
+    color: var(--link-color);
+    border-left-color: var(--link-color);
+    font-weight: 600;
+  }
+
+  .year-nav .year-nav-count {
+    opacity: 0.4;
+    font-size: 0.82em;
+  }
+
+  /* 窄螢幕的橫向年份列(放在頂部資訊列裡) */
+  .year-nav-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45em;
+    margin: 0.95em 0 0;
+  }
+
+  .year-nav-inline a {
+    padding: 0.1em 0.62em;
+    border: 1px solid var(--code-background-color);
+    border-radius: 3px;
+    font-size: 0.85em;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-color);
+    text-decoration: none;
+    opacity: 0.75;
+  }
+
+  .year-nav-inline a:hover,
+  .year-nav-inline a.active {
+    border-color: var(--link-color);
+    color: var(--link-color);
+    text-decoration: none;
+    opacity: 1;
+  }
+
+  /* 空間不夠就收掉固定側欄,改用橫向列 */
+  @media (max-width: 1420px) {
+    .year-nav { display: none; }
+  }
+  @media (min-width: 1421px) {
+    .year-nav-inline { display: none; }
+  }
+
+  /* ---------- 語言標記 ---------- */
+  .lang-badge {
+    display: inline-block;
+    min-width: 2.4em;
+    margin-right: 0.55em;
+    padding: 0.05em 0.3em;
+    border: 1px solid var(--link-color);
+    border-radius: 3px;
+    font-size: 0.62em;
+    font-weight: 600;
+    font-style: normal;
+    letter-spacing: 0.06em;
+    text-align: center;
+    vertical-align: middle;
+    color: var(--link-color);
+    opacity: 0.7;
+    text-transform: uppercase;
+  }
+  h1 .lang-badge {
+    font-size: 0.4em;
+  }
+
+  /* 語言說明:列表頂部的圖例,badge 用實際樣式當範例 */
+  .lang-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4em 1.15em;
+    margin: 0;
+    font-size: 0.82em;
+    opacity: 0.85;
+  }
+
+  .lang-legend .legend-item {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .lang-legend .lang-badge {
+    margin-right: 0.5em;
+    font-size: 0.85em;
+    opacity: 1;
+  }
+
+  /* ---------- 標籤頁標題 ---------- */
+  .term-head { margin-bottom: 1.4em; }
+
+  .term-title {
+    margin: 0;
+    font-size: 1.6em;
+    letter-spacing: 0.01em;
+  }
+
+  .term-sub {
+    margin: 0.3em 0 0;
+    font-size: 0.82em;
+    opacity: 0.5;
+  }
+
+  .tags a.current {
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 600px) {
+    ul.blog-posts li {
+      display: block;
+      margin-bottom: 0.8em;
+    }
+    /* 單欄排版下時間軸的座標會歪掉,直接收掉 */
+    .timeline > li::before,
+    .timeline > li::after {
+      display: none;
+    }
+  }
+
+  /* ---------- 文章簡介塊 ---------- */
+  .post-lead {
+    margin: 1.5em 0 2em;
+    padding: 0.2em 0 1.2em;
+    border-bottom: 1px solid var(--code-background-color);
+    font-size: 1.05em;
+    line-height: 1.7;
+    color: var(--text-color);
+    opacity: 0.82;
+  }
+
+  /* ---------- 社群連結 ---------- */
+  .social-links {
+    margin-top: 0.9em;
+    margin-bottom: 0.5em;
+    font-size: 0.9em;
+  }
+  .social-links a { margin: 0 7px; }
+</style>
+
+</head>
+<body>
+  <header>
+  <a href="https://jimmysured.github.io/" class="title">
+    <h1>su Jimmy</h1>
+  </a>
+  <nav aria-label="site">
+      <a href="https://jimmysured.github.io/">home</a>
+      <a href="https://jimmysured.github.io/blog/">blog</a>
+      <a href="https://jimmysured.github.io/about/">about</a>
+  </nav>
+</header>
+<h1><span class="lang-badge">ZH</span> Diamond Ticket &amp; Sapphire Ticket</h1>
+      <p class="meta-inline">
+        <i>
+          <time datetime="2022-09-28T00:00:00+00:00" pubdate>2022-09-28</time>
+        </i>
+      </p>
+    <aside class="meta-rail">
+      <div class="meta-block">
+        <span class="meta-label">Published</span>
+        <time datetime="2022-09-28T00:00:00+00:00">2022-09-28</time>
+      </div>
+        <div class="meta-block">
+          <span class="meta-label">Tags</span>
+            <a href="https://jimmysured.github.io/tags/active-directory/">#active directory</a>
+            <a href="https://jimmysured.github.io/tags/red-team/">#red team</a>
+            <a href="https://jimmysured.github.io/tags/pentest/">#pentest</a>
+        </div>
+        <div class="meta-block">
+          <span class="meta-label">Reading</span>
+          <span>4 min</span>
+        </div>
+    </aside><aside class="toc-float">
+      <span class="toc-title">Table of contents</span>
+    <ul>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#silver-golden-ticket">Silver &amp; Golden Ticket</a>
+        <ul>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#jian-jie">簡介</a>
+            </li>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#xian-zhi-ke-neng-feng-xian">限制 &amp; 可能風險</a>
+            </li>
+        </ul>
+        </li>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#diamond-ticket">Diamond Ticket</a>
+        <ul>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#jian-jie-hao-chu">簡介 &amp; 好處</a>
+            </li>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#gong-ji-zhi-ling">攻擊指令</a>
+            </li>
+        </ul>
+        </li>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#sapphire-ticket">Sapphire Ticket</a>
+        <ul>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#jian-jie-hao-chu-1">簡介 &amp; 好處</a>
+            </li>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#gong-ji-zhi-ling-1">攻擊指令</a>
+            </li>
+        </ul>
+        </li>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#reference">Reference</a>
+        </li>
+    </ul>
+    </aside><details class="toc-inline" >
+      <summary>Table of contents</summary>
+    <ul>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#silver-golden-ticket">Silver &amp; Golden Ticket</a>
+        <ul>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#jian-jie">簡介</a>
+            </li>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#xian-zhi-ke-neng-feng-xian">限制 &amp; 可能風險</a>
+            </li>
+        </ul>
+        </li>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#diamond-ticket">Diamond Ticket</a>
+        <ul>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#jian-jie-hao-chu">簡介 &amp; 好處</a>
+            </li>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#gong-ji-zhi-ling">攻擊指令</a>
+            </li>
+        </ul>
+        </li>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#sapphire-ticket">Sapphire Ticket</a>
+        <ul>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#jian-jie-hao-chu-1">簡介 &amp; 好處</a>
+            </li>
+            <li>
+              <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#gong-ji-zhi-ling-1">攻擊指令</a>
+            </li>
+        </ul>
+        </li>
+        <li>
+          <a href="https://jimmysured.github.io/2022/09/28/Diamond-Ticket-Sapphire-Ticket/#reference">Reference</a>
+        </li>
+    </ul>
+    </details>
+    <div class="post-lead">An intro to Diamond and Sapphire Tickets, how they differ from Golden and Silver Tickets, and why they are hard to detect.</div>
+
+  <main>
+    <p>大家安安, 這篇文章簡單介紹近期比較新的 AD 攻擊手法, Diamond Ticket 和 Sapphire Ticket</p>
+<span id="continue-reading"></span>
+<ul>
+<li>在開始介紹 Diamond &amp; Sapphire Ticket 之前, 要先介紹 Silver &amp; Golden Ticket, 因為在理解 Diamond &amp; Sapphire Ticket 之前需要先理解這兩個 Ticket 的原理和限制</li>
+</ul>
+<h1 id="silver-golden-ticket">Silver &amp; Golden Ticket</h1>
+<h2 id="jian-jie">簡介</h2>
+<ul>
+<li>這邊不詳細描述 Silver 和 Golden Ticket 的原理</li>
+<li>簡單來說
+<ul>
+<li><strong>Silver Ticket</strong> 是偽造的 <strong>TGS</strong>, 如果拿到 <strong>machine account key</strong>, 可以偽造該 machine 上任何使用者到該 machine service 的 ticket, 後續可以做橫向移動或是提權</li>
+<li><strong>Golden Ticket</strong> 是偽造的 <strong>TGT</strong>, 需要 <strong>krbtgt key</strong>, 但通常拿到 krbtgt key 就已經<strong>打下整個 domain 了</strong>, 所以通常拿來進行 <strong>persistence</strong>, 或是在 <strong>Parent-child Trust</strong> 的情境下拿來進行橫向移動</li>
+</ul>
+</li>
+</ul>
+<h2 id="xian-zhi-ke-neng-feng-xian">限制 &amp; 可能風險</h2>
+<ul>
+<li>
+<p>Silver Ticket 雖然使用條件較為寬鬆, 但其<strong>限制</strong>為有時只限制於<strong>任何使用者</strong>, 但<strong>單一 service</strong> 或是<strong>任何 service</strong>, 但<strong>單一 machine</strong></p>
+</li>
+<li>
+<p>Golden Ticket 雖然能以任何使用者的身分訪問 domain 上任何的 service 但其<strong>限制</strong>為需要拿到 <strong>krbtgt key</strong></p>
+</li>
+<li>
+<p>因為 Silver 和 Golden Ticket 都是透過<strong>偽造 ticket</strong> 達到的, 因此在 Kerberos 驗證流程中會<strong>沒有</strong>相對應的 <strong>Service Ticket requests (KRB_TGS_REQ)</strong> 或是 <strong>TGT request (KRB_AS_REQ)</strong>, 因此<strong>常被檢測到</strong></p>
+</li>
+</ul>
+<h1 id="diamond-ticket">Diamond Ticket</h1>
+<h2 id="jian-jie-hao-chu">簡介 &amp; 好處</h2>
+<ul>
+<li>
+<p>Diamond Ticket 是近<strong>兩個月</strong>才跑出來的攻擊手法, 其<strong>結果和 Golden Ticket 相同</strong>, 如果成功使用 Diamond Ticket, 就能以任何使用者的身分訪問 domain 上任何的 service</p>
+</li>
+<li>
+<p>但比起 Golden Ticket, Diamond Ticket <strong>更為隱密</strong>, 即 <strong>OPSEC 較佳</strong>, <strong>不容易被偵測到</strong></p>
+</li>
+<li>
+<p>OPSEC 較佳的原因是因為</p>
+<ul>
+<li><strong>Golden Ticket</strong> 是透過偽造 TGT 達成的, 因此<strong>不會</strong>有與其相對應的 <strong>TGT request (KRB_AS_REQ)</strong>, 那也因為 TGT 是偽造的, 所以其中的 <strong>PAC</strong> 也是偽造的, 有時候會因為<strong>和真實的 PAC 不像</strong>, 讓<strong>被偵測的機率提高</strong></li>
+<li>而 <strong>Diamond Ticket</strong> 是<strong>直接請求一個 TGT</strong>, 並<strong>對 PAC 解密</strong>, <strong>修改 PAC</strong>, 接著重新計算 singnatures, 並再次加密這個 TGT</li>
+<li>那也因為是直接請求一個 TGT, 所以在 Kerberos 驗證流程中就會<strong>有</strong>相對應的 <strong>TGT request (KRB_AS_REQ)</strong>, 從而降低被偵測到的機率</li>
+</ul>
+</li>
+</ul>
+<h2 id="gong-ji-zhi-ling">攻擊指令</h2>
+<ul>
+<li>
+<p>那因為需要對 TGT 進行解密, 所以也需要 <strong>krbtgt key</strong>, 並且強制需求要是 <strong>AES256 key</strong></p>
+</li>
+<li>
+<p>Command:</p>
+</li>
+</ul>
+<pre data-lang="powershell" style="background-color:#2b303b;color:#c0c5ce;" class="language-powershell "><code class="language-powershell" data-lang="powershell"><span>	</span><span style="color:#96b5b4;">Rubeus.exe</span><span> diamond /domain:DOMAIN /user:USER /password:PASSWORD /dc:DOMAIN_CONTROLLER /enctype:AES256 /krbkey:HASH /ticketuser:USERNAME /ticketuserid:USER_ID /groups:GROUP_IDS  
+</span></code></pre>
+<ul>
+<li>實際運行攻擊指令後會發現以下訊息</li>
+</ul>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>	[*] Action: Diamond Ticket
+</span><span>	
+</span><span>	[*] No target SPN specified, attempting to build &#39;cifs/dc.domain.com&#39;
+</span><span>	[*] Initializing Kerberos GSS-API w/ fake delegation for target &#39;cifs/dc-2.dev.cyberbotic.io&#39;
+</span><span>	[+] Kerberos GSS-API initialization success!
+</span><span>	[+] Delegation requset success! AP-REQ delegation ticket is now in GSS-API output.
+</span><span>	[*] Found the AP-REQ delegation ticket in the GSS-API output.
+</span><span>	[*] Authenticator etype: aes256_cts_hmac_sha1
+</span><span>	[*] Extracted the service ticket session key from the ticket cache: +mzV4aOvQx3/dpZGBaVEhccq1t+jhKi8oeCYXkjHXw4=
+</span><span>	[+] Successfully decrypted the authenticator
+</span><span>	[*] base64(ticket.kirbi):
+</span><span>	
+</span><span>	      doIFgz [...snip...] MuSU8=
+</span><span>	
+</span><span>	[*] Decrypting TGT          # here
+</span><span>	[*] Retreiving PAC          # here
+</span><span>	[*] Modifying PAC           # here
+</span><span>	[*] Signing PAC             # here
+</span><span>	[*] Encrypting Modified TGT # here
+</span><span>	
+</span><span>	[*] base64(ticket.kirbi):
+</span><span>	
+</span><span>	doIFYj [...snip...] MuSU8=
+</span></code></pre>
+<ul>
+<li>在 <code>doIFgz [...snip...] MuSU8=</code> 的下一段, 明顯可以看出 Diamond Ticket 的確是透過修該合法的 TGT 當中的 PAC 來達到這個攻擊手法</li>
+<li>後續只要再將這個 ticke pass 到環境中就可以使用了</li>
+</ul>
+<h1 id="sapphire-ticket">Sapphire Ticket</h1>
+<h2 id="jian-jie-hao-chu-1">簡介 &amp; 好處</h2>
+<ul>
+<li>
+<p>而 Sapphire Ticket 是在我這篇文章 PO 出來的<strong>前幾天</strong>才出現的攻擊手法, 是我在滑 Twitter 時看到<a href="https://twitter.com/_nwodtuhs/status/1574163065142218755">這篇文章</a>才發現有這個攻擊手法的</p>
+</li>
+<li>
+<p><strong>Sapphire Ticket</strong> 和 <strong>Diamond Ticket</strong> 的<strong>差別只在於修改 TGT 中 PAC 的方式</strong></p>
+<ul>
+<li><strong>Diamond Ticket</strong> 是透過對 TGT 中 PAC <strong>新增特權群組 (privileged groups)</strong>, 或是直接<strong>偽造一個特權群組並寫入 TGT 的 PAC 中</strong>
+<ul>
+<li>那這個行為會讓檢測軟體能透過<strong>檢查</strong> <strong>TGT</strong> 中 <strong>PAC</strong> 的<strong>群組</strong>去和 Active Directory 中這個群組實際有沒有包含這個 user 做關聯</li>
+<li>舉例來說, 如果要讓沒有特殊權限的 <strong>userA</strong> 能夠訪問 doamin 上的各個 service, 就可以使用 Diamond Ticket, 那在過程中會修改 TGT 中的 PAC, 實際觀看這個 PAC 的值會發現, 使用者是 <strong>userA</strong>, 群組是一個<strong>特權群組</strong>, 這時候檢測軟體去 <strong>Active Directory 查看 userA 是不是這個特權群組的成員</strong>, 就會發現異常狀況</li>
+</ul>
+</li>
+<li>那 <strong>Sapphire Ticket</strong> 就是改良 Diamond Ticket 上面提到的可能的風險, 透過 <strong>S4U2self + u2u</strong> 來<strong>取得高權限使用者的 PAC</strong>, 並將 <strong>TGT</strong> 的 <strong>PAC 取代成高權限使用者的 PAC</strong>
+<ul>
+<li>這樣檢測軟體在對 PAC 做檢測會因為 PAC 中特權群組裡的確有這個高權限使用者, 所以就認定該 PAC 是合法的</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>因 <strong>S4U2self + u2u</strong> 其背後原理有點複雜, 故不多在這贅述, 以後如果有機會再和大家分享其背後的原理</p>
+</li>
+</ul>
+<h2 id="gong-ji-zhi-ling-1">攻擊指令</h2>
+<ul>
+<li>
+<p>由於太新, 因此在 Windows 上還沒有相關的工具能實作此攻擊手法, 目前只有 UNIX-based 的工具 <strong>Impackt</strong> 的 <strong>ticker</strong> 能實作</p>
+</li>
+<li>
+<p>Command</p>
+</li>
+</ul>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span>	</span><span style="color:#bf616a;">ticketer.py -request -impersonate </span><span>&#39;</span><span style="color:#a3be8c;">domainadmin</span><span>&#39;</span><span style="color:#bf616a;"> -domain </span><span>&#39;</span><span style="color:#a3be8c;">DOMAIN.FQDN</span><span>&#39;</span><span style="color:#bf616a;"> -user </span><span>&#39;</span><span style="color:#a3be8c;">domain_user</span><span>&#39;</span><span style="color:#bf616a;"> -password </span><span>&#39;</span><span style="color:#a3be8c;">password</span><span>&#39;</span><span style="color:#bf616a;"> -aesKey </span><span>&#39;</span><span style="color:#a3be8c;">krbtgt/service AES key</span><span>&#39;</span><span style="color:#bf616a;"> -domain-sid </span><span>&#39;</span><span style="color:#a3be8c;">S-1-5-21-...</span><span>&#39; &#39;</span><span style="color:#a3be8c;">baduser</span><span>&#39;
+</span></code></pre>
+<h1 id="reference">Reference</h1>
+<ul>
+<li><a href="https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/silver">https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/silver</a></li>
+<li><a href="https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/golden">https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/golden</a></li>
+<li><a href="https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/diamond">https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/diamond</a></li>
+<li><a href="https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/sapphire">https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/sapphire</a></li>
+</ul>
+
+  </main>
+
+  <p class="meta-inline">
+        Categories:
+          <a href="https://jimmysured.github.io/categories/technique/">#Technique</a>
+        Tags:
+          <a href="https://jimmysured.github.io/tags/active-directory/">#active directory</a>
+          <a href="https://jimmysured.github.io/tags/red-team/">#red team</a>
+          <a href="https://jimmysured.github.io/tags/pentest/">#pentest</a>
+  </p>
+<footer>
+    <div class="social-links">
+        <a href="https:&#x2F;&#x2F;github.com&#x2F;jimmysured" rel="me noopener" target="_blank">GitHub</a>
+        <a href="https:&#x2F;&#x2F;x.com&#x2F;jimmysured" rel="me noopener" target="_blank">X</a>
+        <a href="https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;jiun-ming-su-828a0419b&#x2F;" rel="me noopener" target="_blank">LinkedIn</a>
+        <a href="https://jimmysured.github.io/atom.xml">RSS</a>
+    </div>
+    <div>
+      Made with <a href="https://codeberg.org/alinnow/zola-bearblog">Zola ʕ•ᴥ•ʔ Bear</a>
+    </div>
+</footer>
+
+<script>
+(function () {
+  var toc = document.querySelector('.toc-float');
+  if (!toc || !window.IntersectionObserver) return;
+
+  var links = Array.prototype.slice.call(toc.querySelectorAll('a'));
+  var map = {};
+  var targets = [];
+
+  links.forEach(function (a) {
+    var id = decodeURIComponent(a.hash || '').slice(1);
+    var el = id && document.getElementById(id);
+    if (el) { map[id] = a; targets.push(el); }
+  });
+  if (!targets.length) return;
+
+  var current = null;
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var a = map[e.target.id];
+      if (!a || a === current) return;
+      if (current) current.classList.remove('active');
+      a.classList.add('active');
+      current = a;
+    });
+  }, { rootMargin: '0px 0px -72% 0px', threshold: 0 });
+
+  targets.forEach(function (t) { obs.observe(t); });
+})();
+</script>
+</body>
+</html>

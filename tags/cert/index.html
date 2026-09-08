@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>#cert | su Jimmy</title>
+  
+
+<meta name="title" content="su Jimmy">
+<meta name="description" content="Security research notes on Active Directory, identity, and red team.">
+<meta name="author" content="su Jimmy">
+<link rel="canonical" href="https://jimmysured.github.io">
+
+<meta property="og:site_name" content="su Jimmy">
+<meta property="og:type" content="website">
+<meta property="og:title" content="su Jimmy">
+<meta property="og:description" content="Security research notes on Active Directory, identity, and red team.">
+<meta property="og:url" content="https://jimmysured.github.io">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@jimmysured">
+<meta name="twitter:creator" content="@jimmysured">
+<meta name="twitter:title" content="su Jimmy">
+<meta name="twitter:description" content="Security research notes on Active Directory, identity, and red team.">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+  
+  <link rel="alternate" type="application/atom+xml" title="su Jimmy" href="https://jimmysured.github.io/atom.xml">
+  <style>
+    :root {
+    --width: 800px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color: #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background-color: #01242e;
+      --heading-color: #eee;
+      --text-color: #ddd;
+      --link-color: #8cc2dd;
+      --visited-color: #8b6fcb;
+      --code-background-color: #000;
+      --code-color: #ddd;
+      --blockquote-color: #ccc;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  nav span.active {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  pre code {
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    display: block;
+    padding: 20px;
+    white-space: pre-wrap;
+    font-size: 0.875rem;
+    overflow-x: auto;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+  /* blog post list */
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+
+  .tags {
+    font-size: smaller;
+  }
+
+  .footnote-definition {
+    display: flex;
+    margin-top: 1em;
+  }
+  .footnote-definition-label {
+    margin-left: 1rem;
+    margin-right: 0.5rem;
+    vertical-align: baseline;
+  }
+  .footnote-definition-label::after {
+    content: "."
+  }
+  .footnote-definition > p {
+    margin: 0;
+  }
+
+  </style><style>
+  /* ---------- 圖片 ---------- */
+  main img {
+    display: block;
+    margin: 1.6em auto;
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  main figure { margin: 1.6em 0; }
+  main figure figcaption {
+    text-align: center;
+    font-size: 0.85em;
+    color: var(--text-color);
+    opacity: 0.75;
+    margin-top: 0.5em;
+  }
+
+  main img[alt^="inline"] {
+    display: inline-block;
+    margin: 0.5em;
+    max-width: 45%;
+  }
+
+  /* ---------- 右側浮動目錄 ---------- */
+  .toc-float {
+    position: fixed;
+    top: 100px;
+    left: calc(50% + (var(--width) / 2) + 44px);
+    width: 280px;
+    max-height: 74vh;
+    overflow-y: auto;
+    font-size: 0.92em;
+    line-height: 1.7;
+    padding-left: 18px;
+    border-left: 1px solid var(--code-background-color);
+    scrollbar-width: thin;
+  }
+
+  .toc-float .toc-title {
+    display: block;
+    font-size: 0.72em;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--heading-color);
+    opacity: 0.55;
+    margin-bottom: 1.1em;
+  }
+
+  .toc-float ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+
+  /* 第二層:縮排 + 縮小 + 淡一點 */
+  .toc-float ul ul {
+    padding-left: 14px;
+    margin-top: 0.35em;
+    margin-bottom: 0.6em;
+    font-size: 0.92em;
+  }
+  .toc-float ul ul a { opacity: 0.78; }
+
+  /* 第一層項目間距大一點 */
+  .toc-float > ul > li {
+    margin-bottom: 0.75em;
+  }
+  .toc-float ul ul li {
+    margin-bottom: 0.3em;
+  }
+
+  .toc-float a {
+    display: block;
+    color: var(--text-color);
+    text-decoration: none;
+    padding-left: 12px;
+    margin-left: -13px;
+    border-left: 2px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .toc-float a:hover {
+    color: var(--link-color);
+    border-left-color: var(--link-color);
+    text-decoration: none;
+  }
+
+  /* 捲到哪就標到哪 */
+  .toc-float a.active {
+    color: var(--link-color);
+    border-left-color: var(--link-color);
+    font-weight: 600;
+  }
+
+  /* 空間不夠就藏起來,改用內嵌版 */
+  @media (max-width: 1420px) {
+    .toc-float { display: none; }
+  }
+  @media (min-width: 1421px) {
+    .toc-inline { display: none; }
+  }
+
+  /* ---------- 左側 metadata rail ---------- */
+  .meta-rail {
+    display: none;                 /* 預設隱藏,夠寬才開 */
+    position: fixed;
+    top: 100px;
+    right: calc(50% + (var(--width) / 2) + 44px);
+    width: 200px;
+    text-align: right;             /* 靠右貼齊內文欄 */
+    font-size: 0.85em;
+    line-height: 1.6;
+  }
+
+  .meta-rail .meta-block {
+    margin-bottom: 1.6em;
+  }
+
+  .meta-rail .meta-label {
+    display: block;
+    font-size: 0.78em;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--heading-color);
+    opacity: 0.45;
+    margin-bottom: 0.35em;
+  }
+
+  .meta-rail time,
+  .meta-rail > .meta-block > span:not(.meta-label) {
+    font-variant-numeric: tabular-nums;
+    opacity: 0.85;
+  }
+
+  .meta-rail a {
+    display: block;
+    color: var(--text-color);
+    opacity: 0.85;
+    text-decoration: none;
+  }
+
+  .meta-rail a:hover {
+    color: var(--link-color);
+    opacity: 1;
+    text-decoration: underline;
+  }
+
+  /* 夠寬才顯示左欄;顯示時把內文裡重複的 metadata 收起來 */
+  @media (min-width: 1500px) {
+    .meta-rail { display: block; }
+    .meta-inline { display: none; }
+  }
+
+  h1, h2, h3, h4, h5, h6 { scroll-margin-top: 24px; }
+
+  /* ---------- About 的 Speaking / Certifications ----------
+     跟文章列表同一套語彙:左欄 + 時間軸 + 標題 + 淡化副行。 */
+  ul.cv-list {
+    --rail: 158px;
+    --gap: 0.85em;
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  ul.cv-list > li {
+    display: grid;
+    grid-template-columns: 150px 26px 1fr;
+    align-items: baseline;
+    margin: 0 0 0.85em;
+    padding: 0;
+  }
+
+  /* 國家跟標題同一行,不另起副行 */
+  ul.cv-list .cv-loc {
+    font-size: 0.88em;
+    opacity: 0.5;
+    white-space: nowrap;
+  }
+
+  /* 前面的空白靠原始碼換行,這裡只補後面,避免變成兩個空格 */
+  ul.cv-list .cv-loc::before { content: "\00b7"; margin-right: 0.35em; }
+
+  /* About 的年份區塊比文章列表密,因為每年只有兩三場 */
+  .cv-block + .cv-block { margin-top: 2.2em; }
+  .cv-block .year-heading { margin-bottom: 0.85em; }
+
+  ul.cv-list .cv-side {
+    font-size: 0.88em;
+    opacity: 0.65;
+    font-variant-numeric: tabular-nums;
+  }
+
+  ul.cv-list .cv-body {
+    grid-column: 3;
+    display: block;
+  }
+
+  ul.cv-list .cv-note {
+    display: block;
+    margin: 0.25em 0 0;
+    font-size: 0.88em;
+    line-height: 1.5;
+    opacity: 0.55;
+  }
+
+  /* 證照左欄要寬一點(Zero-Point Security) */
+  ul.cv-list.certs {
+    --rail: 176px;
+    --gap: 1.5em;
+  }
+
+  ul.cv-list.certs > li {
+    grid-template-columns: 168px 26px 1fr;
+    margin-bottom: 1.5em;
+  }
+
+  /* 證照代號:借用語言 badge 的外框樣式 */
+  .cert-badge {
+    display: inline-block;
+    margin-right: 0.6em;
+    padding: 0.05em 0.4em;
+    border: 1px solid var(--link-color);
+    border-radius: 3px;
+    font-size: 0.72em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    vertical-align: middle;
+    color: var(--link-color);
+    opacity: 0.7;
+  }
+
+  /* 窄螢幕改成上下排 */
+  @media (max-width: 720px) {
+    ul.cv-list > li,
+    ul.cv-list.certs > li {
+      display: block;
+      margin-bottom: 1.2em;
+    }
+    ul.cv-list .cv-side {
+      display: block;
+      margin-bottom: 0.15em;
+    }
+    /* 單欄排版下座標會歪掉,時間軸收掉 */
+    ul.cv-list > li::before,
+    ul.cv-list > li::after {
+      display: none;
+    }
+  }
+
+  /* ---------- 文章列表(日期 + 標題 + 簡介)---------- */
+  ul.blog-posts { line-height: 1.3; margin: 0.5em 0; }
+
+  ul.blog-posts li {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    align-items: baseline;
+    margin: 0 0 1.4em;
+    padding: 0;
+  }
+
+  ul.blog-posts li .post-date {
+    font-style: italic;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.7;
+    font-size: 0.9em;
+  }
+
+  ul.blog-posts li .post-info {
+    display: block;
+  }
+
+  ul.blog-posts li .post-desc {
+    display: block;
+    margin: 0.25em 0 0;
+    font-size: 0.92em;
+    line-height: 1.5;
+    opacity: 0.6;
+  }
+
+  /* ---------- 列表頂部資訊列 ---------- */
+  .list-head {
+    margin: 0.4em 0 3em;
+    padding-bottom: 0.85em;
+    border-bottom: 1px solid var(--code-background-color);
+  }
+
+  .list-head-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7em 1.4em;
+  }
+
+  .list-meta {
+    font-size: 0.78em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.45;
+  }
+
+  /* ---------- 年份區塊 ---------- */
+  .year-block { scroll-margin-top: 20px; }
+  .year-block + .year-block { margin-top: 3.6em; }
+
+  /* 大字年份 + 往右延伸的細線,當年份分隔 */
+  .year-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.65em;
+    margin: 0 0 1.35em;
+    font-size: 1.5em;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+    color: var(--heading-color);
+    opacity: 0.32;
+  }
+
+  .year-heading::after {
+    content: "";
+    flex: 1 1 auto;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.45;
+  }
+
+  /* ---------- 時間軸(文章列表與 About 共用)----------
+     --rail 是垂直線的 x 座標,--gap 是 li 的 margin-bottom,
+     兩個都由各清單依自己的欄寬與行距覆寫。 */
+  .timeline {
+    position: relative;
+    margin: 0;
+    list-style: none;
+    padding: 0;
+    --rail: 66px;
+    --gap: 1.4em;
+  }
+
+  .timeline > li { position: relative; }
+
+  /* 線一段一段接在圓點之間,不是整條畫在 ul 上 --
+     整條畫的話最後一筆的線會拖過圓點、垂到項目底部。 */
+  .timeline > li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: var(--rail);
+    top: calc(0.45em + 13px);
+    bottom: calc(3px - var(--gap) - 0.45em);
+    width: 1px;
+    background: var(--text-color);
+    opacity: 0.16;
+  }
+
+  .timeline > li::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--rail) - 3px);
+    top: 0.45em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 1.5px solid var(--link-color);
+    background: var(--background-color);
+    opacity: 0.5;
+    transition: opacity 0.15s ease, background-color 0.15s ease;
+  }
+
+  .timeline > li:hover::before {
+    opacity: 1;
+    background: var(--link-color);
+  }
+
+  /* 年份標題已交代年,列表只剩月日;中間空一欄讓出時間軸 */
+  .year-block ul.blog-posts li {
+    grid-template-columns: 58px 26px 1fr;
+  }
+
+  .year-block ul.blog-posts li .post-info { grid-column: 3; }
+
+  /* ---------- 右側年份導覽 ---------- */
+  .year-nav {
+    position: fixed;
+    top: 100px;
+    left: calc(50% + (var(--width) / 2) + 44px);
+    width: 150px;
+    max-height: 74vh;
+    overflow-y: auto;
+    font-size: 0.92em;
+    line-height: 1.7;
+    padding-left: 18px;
+    border-left: 1px solid var(--code-background-color);
+    scrollbar-width: thin;
+  }
+
+  .year-nav .year-nav-title {
+    display: block;
+    font-size: 0.72em;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--heading-color);
+    opacity: 0.55;
+    margin-bottom: 1.1em;
+  }
+
+  .year-nav ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+
+  .year-nav li { margin-bottom: 0.45em; }
+
+  .year-nav a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    color: var(--text-color);
+    text-decoration: none;
+    padding-left: 12px;
+    margin-left: -13px;
+    border-left: 2px solid transparent;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .year-nav a:hover {
+    color: var(--link-color);
+    border-left-color: var(--link-color);
+    text-decoration: none;
+  }
+
+  .year-nav a.active {
+    color: var(--link-color);
+    border-left-color: var(--link-color);
+    font-weight: 600;
+  }
+
+  .year-nav .year-nav-count {
+    opacity: 0.4;
+    font-size: 0.82em;
+  }
+
+  /* 窄螢幕的橫向年份列(放在頂部資訊列裡) */
+  .year-nav-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45em;
+    margin: 0.95em 0 0;
+  }
+
+  .year-nav-inline a {
+    padding: 0.1em 0.62em;
+    border: 1px solid var(--code-background-color);
+    border-radius: 3px;
+    font-size: 0.85em;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-color);
+    text-decoration: none;
+    opacity: 0.75;
+  }
+
+  .year-nav-inline a:hover,
+  .year-nav-inline a.active {
+    border-color: var(--link-color);
+    color: var(--link-color);
+    text-decoration: none;
+    opacity: 1;
+  }
+
+  /* 空間不夠就收掉固定側欄,改用橫向列 */
+  @media (max-width: 1420px) {
+    .year-nav { display: none; }
+  }
+  @media (min-width: 1421px) {
+    .year-nav-inline { display: none; }
+  }
+
+  /* ---------- 語言標記 ---------- */
+  .lang-badge {
+    display: inline-block;
+    min-width: 2.4em;
+    margin-right: 0.55em;
+    padding: 0.05em 0.3em;
+    border: 1px solid var(--link-color);
+    border-radius: 3px;
+    font-size: 0.62em;
+    font-weight: 600;
+    font-style: normal;
+    letter-spacing: 0.06em;
+    text-align: center;
+    vertical-align: middle;
+    color: var(--link-color);
+    opacity: 0.7;
+    text-transform: uppercase;
+  }
+  h1 .lang-badge {
+    font-size: 0.4em;
+  }
+
+  /* 語言說明:列表頂部的圖例,badge 用實際樣式當範例 */
+  .lang-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4em 1.15em;
+    margin: 0;
+    font-size: 0.82em;
+    opacity: 0.85;
+  }
+
+  .lang-legend .legend-item {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .lang-legend .lang-badge {
+    margin-right: 0.5em;
+    font-size: 0.85em;
+    opacity: 1;
+  }
+
+  /* ---------- 標籤頁標題 ---------- */
+  .term-head { margin-bottom: 1.4em; }
+
+  .term-title {
+    margin: 0;
+    font-size: 1.6em;
+    letter-spacing: 0.01em;
+  }
+
+  .term-sub {
+    margin: 0.3em 0 0;
+    font-size: 0.82em;
+    opacity: 0.5;
+  }
+
+  .tags a.current {
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 600px) {
+    ul.blog-posts li {
+      display: block;
+      margin-bottom: 0.8em;
+    }
+    /* 單欄排版下時間軸的座標會歪掉,直接收掉 */
+    .timeline > li::before,
+    .timeline > li::after {
+      display: none;
+    }
+  }
+
+  /* ---------- 文章簡介塊 ---------- */
+  .post-lead {
+    margin: 1.5em 0 2em;
+    padding: 0.2em 0 1.2em;
+    border-bottom: 1px solid var(--code-background-color);
+    font-size: 1.05em;
+    line-height: 1.7;
+    color: var(--text-color);
+    opacity: 0.82;
+  }
+
+  /* ---------- 社群連結 ---------- */
+  .social-links {
+    margin-top: 0.9em;
+    margin-bottom: 0.5em;
+    font-size: 0.9em;
+  }
+  .social-links a { margin: 0 7px; }
+</style>
+
+</head>
+<body>
+  <header>
+  <a href="https://jimmysured.github.io/" class="title">
+    <h1>su Jimmy</h1>
+  </a>
+  <nav aria-label="site">
+      <a href="https://jimmysured.github.io/">home</a>
+      <a href="https://jimmysured.github.io/blog/">blog</a>
+      <a href="https://jimmysured.github.io/about/">about</a>
+  </nav>
+</header>
+<main>
+    <div class="term-head">
+      <h1 class="term-title">#cert</h1>
+      <p class="term-sub">
+        <a href="https://jimmysured.github.io/blog/">&larr; All posts</a>
+      </p>
+    </div>
+
+    
+    <aside class="year-nav">
+      <span class="year-nav-title">Archive</span>
+      <ul>
+          <li>
+            <a href="#y2022">
+              <span class="year-nav-year">2022</span>
+              <span class="year-nav-count">1</span>
+            </a>
+          </li>
+          <li>
+            <a href="#y2021">
+              <span class="year-nav-year">2021</span>
+              <span class="year-nav-count">1</span>
+            </a>
+          </li>
+          <li>
+            <a href="#y2020">
+              <span class="year-nav-year">2020</span>
+              <span class="year-nav-count">1</span>
+            </a>
+          </li>
+      </ul>
+    </aside>
+
+      
+
+  <div class="list-head">
+    <div class="list-head-row">
+      <span class="list-meta">
+        3 posts &middot; 2020-2022
+      </span>
+      <span class="lang-legend">
+        <span class="legend-item"><span class="lang-badge">ZH</span>chinese</span>
+        <span class="legend-item"><span class="lang-badge">EN</span>english</span>
+      </span>
+    </div>
+      <nav class="year-nav-inline"><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a>
+      </nav>
+  </div>
+    <section class="year-block" id="y2022">
+      <h2 class="year-heading"><span>2022</span></h2>
+      <ul class="blog-posts timeline">
+          <li><span class="post-date">
+              <time datetime="2022-09-25T00:00:00+00:00" pubdate>09-25</time>
+            </span>
+            <span class="post-info">
+              <span class="post-title"><span class="lang-badge">ZH</span>
+                <a href="https:&#x2F;&#x2F;jimmysured.github.io&#x2F;2022&#x2F;09&#x2F;25&#x2F;CRTO_Certificate_Review&#x2F;">CRTO Certificate Review</a>
+              </span><span class="post-desc">Notes on Zero-Point Security&#x27;s CRTO: course content, the lab, the exam, and how to prepare.</span>
+            </span>
+          </li>
+      </ul>
+    </section>
+    <section class="year-block" id="y2021">
+      <h2 class="year-heading"><span>2021</span></h2>
+      <ul class="blog-posts timeline">
+          <li><span class="post-date">
+              <time datetime="2021-01-02T00:00:00+00:00" pubdate>01-02</time>
+            </span>
+            <span class="post-info">
+              <span class="post-title"><span class="lang-badge">ZH</span>
+                <a href="https:&#x2F;&#x2F;jimmysured.github.io&#x2F;2021&#x2F;01&#x2F;02&#x2F;vhl_review&#x2F;">VHL Certificate Review</a>
+              </span><span class="post-desc">Virtual Hacking Labs (VHL) review: lab difficulty tiers, how it differs from HTB, and where it fits before OSCP.</span>
+            </span>
+          </li>
+      </ul>
+    </section>
+    <section class="year-block" id="y2020">
+      <h2 class="year-heading"><span>2020</span></h2>
+      <ul class="blog-posts timeline">
+          <li><span class="post-date">
+              <time datetime="2020-08-07T00:00:00+00:00" pubdate>08-07</time>
+            </span>
+            <span class="post-info">
+              <span class="post-title"><span class="lang-badge">ZH</span>
+                <a href="https:&#x2F;&#x2F;jimmysured.github.io&#x2F;2020&#x2F;08&#x2F;07&#x2F;ejpt_review&#x2F;">eJPT Certificate Review</a>
+              </span><span class="post-desc">eJPT review: what the course and exam cover, how to prepare, and who this entry-level pentest cert suits.</span>
+            </span>
+          </li>
+      </ul>
+    </section>
+
+
+    <div class="tags">
+        <a href="https:&#x2F;&#x2F;jimmysured.github.io&#x2F;tags&#x2F;active-directory&#x2F;">#active directory</a>&nbsp;
+        <a href="https:&#x2F;&#x2F;jimmysured.github.io&#x2F;tags&#x2F;c2&#x2F;">#c2</a>&nbsp;
+        <a href="https:&#x2F;&#x2F;jimmysured.github.io&#x2F;tags&#x2F;career&#x2F;">#career</a>&nbsp;
+        <a href="https:&#x2F;&#x2F;jimmysured.github.io&#x2F;tags&#x2F;cert&#x2F;" class="current">#cert</a>&nbsp;
+        <a href="https:&#x2F;&#x2F;jimmysured.github.io&#x2F;tags&#x2F;pentest&#x2F;">#pentest</a>&nbsp;
+        <a href="https:&#x2F;&#x2F;jimmysured.github.io&#x2F;tags&#x2F;red-team&#x2F;">#red team</a>&nbsp;
+        <a href="https:&#x2F;&#x2F;jimmysured.github.io&#x2F;tags&#x2F;talk&#x2F;">#talk</a>&nbsp;
+        <a href="https:&#x2F;&#x2F;jimmysured.github.io&#x2F;tags&#x2F;walkthrough&#x2F;">#walkthrough</a>&nbsp;
+    </div>
+  </main>
+<footer>
+    <div class="social-links">
+        <a href="https:&#x2F;&#x2F;github.com&#x2F;jimmysured" rel="me noopener" target="_blank">GitHub</a>
+        <a href="https:&#x2F;&#x2F;x.com&#x2F;jimmysured" rel="me noopener" target="_blank">X</a>
+        <a href="https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;jiun-ming-su-828a0419b&#x2F;" rel="me noopener" target="_blank">LinkedIn</a>
+        <a href="https://jimmysured.github.io/atom.xml">RSS</a>
+    </div>
+    <div>
+      Made with <a href="https://codeberg.org/alinnow/zola-bearblog">Zola ʕ•ᴥ•ʔ Bear</a>
+    </div>
+</footer>
+
+<script>
+(function () {
+  var navs = Array.prototype.slice.call(document.querySelectorAll('.year-nav, .year-nav-inline'));
+  if (!navs.length || !window.IntersectionObserver) return;
+
+  var map = {};
+  var targets = [];
+
+  navs.forEach(function (nav) {
+    Array.prototype.slice.call(nav.querySelectorAll('a')).forEach(function (a) {
+      var id = decodeURIComponent(a.hash || '').slice(1);
+      var el = id && document.getElementById(id);
+      if (!el) return;
+      if (!map[id]) { map[id] = []; targets.push(el); }
+      map[id].push(a);
+    });
+  });
+  if (!targets.length) return;
+
+  var current = null;
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting || current === e.target.id) return;
+      if (current && map[current]) {
+        map[current].forEach(function (a) { a.classList.remove('active'); });
+      }
+      current = e.target.id;
+      map[current].forEach(function (a) { a.classList.add('active'); });
+    });
+  }, { rootMargin: '0px 0px -72% 0px', threshold: 0 });
+
+  targets.forEach(function (t) { obs.observe(t); });
+})();
+</script>
+</body>
+</html>
